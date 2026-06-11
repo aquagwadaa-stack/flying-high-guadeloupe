@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Check, ArrowRight } from "lucide-react";
-import gallery5 from "@/assets/gallery-5.jpg";
+import gallery5Asset from "@/assets/gallery-6.jpg.asset.json";
+const gallery5 = gallery5Asset.url;
 
 export const Route = createFileRoute("/decouvrir")({
   head: () => ({

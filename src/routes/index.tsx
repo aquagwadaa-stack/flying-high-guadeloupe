@@ -1,11 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Check, Sparkles, Heart, MapPin, Clock, Users, Star } from "lucide-react";
-import heroFlight from "@/assets/hero-flight.jpg";
-import groupSchool from "@/assets/group-school.jpg";
-import gallery1 from "@/assets/gallery-1.jpg";
-import gallery3 from "@/assets/gallery-3.jpg";
-import gallery6 from "@/assets/gallery-6.jpg";
+import heroFlightAsset from "@/assets/hero-flight.jpg.asset.json";
+import groupSchoolAsset from "@/assets/group-school.jpg.asset.json";
+import gallery1Asset from "@/assets/gallery-1.jpg.asset.json";
+import gallery3Asset from "@/assets/gallery-3.jpg.asset.json";
+import gallery6Asset from "@/assets/gallery-6.jpg.asset.json";
+const heroFlight = heroFlightAsset.url;
+const groupSchool = groupSchoolAsset.url;
+const gallery1 = gallery1Asset.url;
+const gallery3 = gallery3Asset.url;
+const gallery6 = gallery6Asset.url;
 import { formatDateLong, useStore } from "@/lib/data";
 
 export const Route = createFileRoute("/")({
