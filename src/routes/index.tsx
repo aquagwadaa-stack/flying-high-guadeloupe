@@ -258,8 +258,8 @@ function Photos() {
               Quelques moments en vol.
             </h2>
           </div>
-          <Link to="/galerie" className="inline-flex items-center gap-2 text-lagoon font-semibold hover:gap-3 transition-all">
-            Voir la galerie <ArrowRight className="size-4" />
+          <Link to="/decouvrir" className="inline-flex items-center gap-2 text-lagoon font-semibold hover:gap-3 transition-all">
+            En savoir plus <ArrowRight className="size-4" />
           </Link>
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 auto-rows-[240px] lg:auto-rows-[280px]">
