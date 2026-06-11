@@ -40,8 +40,8 @@ function Page() {
     return Array.from(map.entries()).slice(0, 14);
   }, [slots, count]);
 
-  const goNext = () => setStep((s) => Math.min(6, (s + 1) as Step));
-  const goPrev = () => setStep((s) => Math.max(0, (s - 1) as Step));
+  const goNext = () => setStep((s) => Math.min(6, s + 1) as Step);
+  const goPrev = () => setStep((s) => Math.max(0, s - 1) as Step);
 
   const canNext = (() => {
     if (step === 0) return !!formuleId;
