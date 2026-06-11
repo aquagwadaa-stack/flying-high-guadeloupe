@@ -1,12 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, Check, Sparkles, Heart, Users, MapPin, Star, Clock, ShieldCheck, Quote } from "lucide-react";
+import { ArrowRight, Check, Sparkles, Heart, MapPin, Clock, Users, Star } from "lucide-react";
 import heroFlight from "@/assets/hero-flight.jpg";
 import groupSchool from "@/assets/group-school.jpg";
 import gallery1 from "@/assets/gallery-1.jpg";
 import gallery3 from "@/assets/gallery-3.jpg";
 import gallery6 from "@/assets/gallery-6.jpg";
-import { FORMULES, TEMOIGNAGES, formatDateLong, useStore } from "@/lib/data";
+import { formatDateLong, useStore } from "@/lib/data";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -29,7 +29,6 @@ function Index() {
       <Experiences />
       <Steps />
       <Photos />
-      <Testimonials />
       <FinalCta />
     </>
   );
@@ -121,10 +120,6 @@ function ExperienceIntro() {
             loading="lazy"
             className="w-full aspect-square object-cover rounded-[2rem]"
           />
-          <div className="absolute -bottom-6 -right-6 bg-solar text-midnight p-6 rounded-2xl shadow-xl rotate-3 hidden md:block">
-            <div className="font-display text-4xl font-bold leading-none">100%</div>
-            <div className="text-xs font-bold uppercase tracking-wider mt-1 max-w-[10ch]">Recommandé sur Facebook</div>
-          </div>
         </div>
         <div className="space-y-8">
           <div>
@@ -163,10 +158,10 @@ function ExperienceIntro() {
 
 function Experiences() {
   const cards = [
-    { id: "envolee", title: "Première envolée", desc: "Découvrez le trapèze pour la toute première fois.", price: "35 €", duration: "1 h 30 · dès 7 ans", color: "lagoon" },
-    { id: "decouverte", title: "Séance découverte", desc: "Une parenthèse aérienne, à l’unité.", price: "30 €", duration: "1 h 30", color: "turquoise" },
-    { id: "progression", title: "Progression régulière", desc: "Carte de 5 séances pour progresser sereinement.", price: "135 €", duration: "Valable 3 mois", color: "solar" },
-    { id: "groupe", title: "Groupe ou événement", desc: "Anniversaire, association, entreprise.", price: "Sur devis", duration: "Modulable", color: "coral" },
+    { id: "envolee", title: "Première envolée", desc: "Votre toute première séance, accompagnée de A à Z.", price: "35 €", duration: "1 h 30 · dès 7 ans", color: "lagoon" },
+    { id: "progression", title: "Séance progression", desc: "Pour celles et ceux qui ont déjà volé et veulent continuer.", price: "30 €", duration: "1 h 30", color: "turquoise" },
+    { id: "carte5", title: "Carte 5 séances", tagline: "", desc: "La formule régulière, pour progresser à son rythme.", price: "135 €", duration: "Valable 3 mois", color: "solar" },
+    { id: "groupe", title: "Groupes & événements", desc: "Anniversaire, association, séminaire, EVJF/EVG.", price: "Sur devis", duration: "Modulable", color: "coral" },
   ];
   return (
     <section className="py-24 lg:py-32 px-5 lg:px-8 bg-secondary/40">
@@ -263,8 +258,8 @@ function Photos() {
               Quelques moments en vol.
             </h2>
           </div>
-          <Link to="/galerie" className="inline-flex items-center gap-2 text-lagoon font-semibold hover:gap-3 transition-all">
-            Voir la galerie <ArrowRight className="size-4" />
+          <Link to="/decouvrir" className="inline-flex items-center gap-2 text-lagoon font-semibold hover:gap-3 transition-all">
+            En savoir plus <ArrowRight className="size-4" />
           </Link>
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 auto-rows-[240px] lg:auto-rows-[280px]">
@@ -272,40 +267,6 @@ function Photos() {
             <div key={i} className={`overflow-hidden rounded-3xl ${p.h} ${i === 0 ? "col-span-2 lg:col-span-1" : ""}`}>
               <img src={p.src} alt={p.alt} loading="lazy" className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
             </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Testimonials() {
-  return (
-    <section className="py-24 lg:py-32 px-5 lg:px-8 bg-secondary/40">
-      <div className="max-w-7xl mx-auto">
-        <div className="max-w-2xl mb-14">
-          <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-coral mb-4">
-            <span className="h-px w-6 bg-coral" /> Ils ont volé avec nous
-          </span>
-          <h2 className="font-display text-4xl lg:text-5xl font-bold tracking-tight text-balance">
-            Recommandé par 100 % des participants sur Facebook.
-          </h2>
-        </div>
-        <div className="grid md:grid-cols-3 gap-5">
-          {TEMOIGNAGES.map((t) => (
-            <figure key={t.nom} className="bg-white rounded-3xl p-7 border border-border flex flex-col">
-              <Quote className="size-8 text-lagoon/30 mb-4" />
-              <blockquote className="text-base leading-relaxed flex-1">« {t.text} »</blockquote>
-              <figcaption className="mt-6 pt-5 border-t border-border flex items-center gap-3">
-                <div className="size-10 rounded-full bg-gradient-to-br from-lagoon to-turquoise flex items-center justify-center text-white font-bold">
-                  {t.nom[0]}
-                </div>
-                <div>
-                  <div className="font-semibold text-sm">{t.nom}</div>
-                  <div className="text-xs text-muted-foreground">{t.lieu}</div>
-                </div>
-              </figcaption>
-            </figure>
           ))}
         </div>
       </div>

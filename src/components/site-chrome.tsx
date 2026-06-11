@@ -8,9 +8,7 @@ const NAV = [
   { to: "/decouvrir", label: "Découvrir" },
   { to: "/seances", label: "Séances & tarifs" },
   { to: "/groupes", label: "Groupes & événements" },
-  { to: "/galerie", label: "Galerie" },
   { to: "/infos", label: "Infos pratiques" },
-  { to: "/contact", label: "Contact" },
 ] as const;
 
 function useScrolled(threshold = 24) {
