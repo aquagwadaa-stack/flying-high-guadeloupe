@@ -10,12 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SeancesRouteImport } from './routes/seances'
+import { Route as ReserverRouteImport } from './routes/reserver'
 import { Route as DecouvrirRouteImport } from './routes/decouvrir'
 import { Route as IndexRouteImport } from './routes/index'
 
 const SeancesRoute = SeancesRouteImport.update({
   id: '/seances',
   path: '/seances',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReserverRoute = ReserverRouteImport.update({
+  id: '/reserver',
+  path: '/reserver',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DecouvrirRoute = DecouvrirRouteImport.update({
@@ -32,30 +38,34 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/decouvrir': typeof DecouvrirRoute
+  '/reserver': typeof ReserverRoute
   '/seances': typeof SeancesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/decouvrir': typeof DecouvrirRoute
+  '/reserver': typeof ReserverRoute
   '/seances': typeof SeancesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/decouvrir': typeof DecouvrirRoute
+  '/reserver': typeof ReserverRoute
   '/seances': typeof SeancesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/decouvrir' | '/seances'
+  fullPaths: '/' | '/decouvrir' | '/reserver' | '/seances'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/decouvrir' | '/seances'
-  id: '__root__' | '/' | '/decouvrir' | '/seances'
+  to: '/' | '/decouvrir' | '/reserver' | '/seances'
+  id: '__root__' | '/' | '/decouvrir' | '/reserver' | '/seances'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DecouvrirRoute: typeof DecouvrirRoute
+  ReserverRoute: typeof ReserverRoute
   SeancesRoute: typeof SeancesRoute
 }
 
@@ -66,6 +76,13 @@ declare module '@tanstack/react-router' {
       path: '/seances'
       fullPath: '/seances'
       preLoaderRoute: typeof SeancesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reserver': {
+      id: '/reserver'
+      path: '/reserver'
+      fullPath: '/reserver'
+      preLoaderRoute: typeof ReserverRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/decouvrir': {
@@ -88,8 +105,19 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DecouvrirRoute: DecouvrirRoute,
+  ReserverRoute: ReserverRoute,
   SeancesRoute: SeancesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
