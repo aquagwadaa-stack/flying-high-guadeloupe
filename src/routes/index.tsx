@@ -18,7 +18,7 @@ export const Route = createFileRoute("/")({
     meta: [
       { title: "Trapez’cool — Trapèze volant à Sainte-Anne, Guadeloupe" },
       { name: "description", content: "École de trapèze volant au Helleux, Sainte-Anne. Séances dès 7 ans, débutants bienvenus. Réservez votre envol en ligne." },
-      { property: "og:title", content: "Prenez votre envol en Guadeloupe — Trapez’cool" },
+      { property: "og:title", content: "Prenez votre envol avec Trapez'cool" },
       { property: "og:description", content: "Découvrez le trapèze volant dans une ambiance conviviale, dès 7 ans et quel que soit votre niveau." },
     ],
   }),
@@ -63,7 +63,7 @@ function Hero() {
           </span>
           <h1 className="font-display text-5xl sm:text-6xl lg:text-8xl font-bold leading-[0.95] tracking-tighter text-balance mb-8">
             Prenez votre <span className="italic text-solar">envol</span><br />
-            en Guadeloupe
+            avec Trapez'cool
           </h1>
           <p className="text-lg lg:text-xl text-white/85 max-w-2xl mb-10 leading-relaxed">
             Découvrez le trapèze volant dans une ambiance conviviale, dès 7 ans et quel que soit votre niveau.
