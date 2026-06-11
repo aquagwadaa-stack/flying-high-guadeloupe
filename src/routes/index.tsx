@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, Check, Sparkles, Heart, MapPin, Clock } from "lucide-react";
+import { ArrowRight, Check, Sparkles, Heart, MapPin, Clock, Users, Star } from "lucide-react";
 import heroFlight from "@/assets/hero-flight.jpg";
 import groupSchool from "@/assets/group-school.jpg";
 import gallery1 from "@/assets/gallery-1.jpg";
@@ -267,40 +267,6 @@ function Photos() {
             <div key={i} className={`overflow-hidden rounded-3xl ${p.h} ${i === 0 ? "col-span-2 lg:col-span-1" : ""}`}>
               <img src={p.src} alt={p.alt} loading="lazy" className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
             </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Testimonials() {
-  return (
-    <section className="py-24 lg:py-32 px-5 lg:px-8 bg-secondary/40">
-      <div className="max-w-7xl mx-auto">
-        <div className="max-w-2xl mb-14">
-          <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-coral mb-4">
-            <span className="h-px w-6 bg-coral" /> Ils ont volé avec nous
-          </span>
-          <h2 className="font-display text-4xl lg:text-5xl font-bold tracking-tight text-balance">
-            Recommandé par 100 % des participants sur Facebook.
-          </h2>
-        </div>
-        <div className="grid md:grid-cols-3 gap-5">
-          {TEMOIGNAGES.map((t) => (
-            <figure key={t.nom} className="bg-white rounded-3xl p-7 border border-border flex flex-col">
-              <Quote className="size-8 text-lagoon/30 mb-4" />
-              <blockquote className="text-base leading-relaxed flex-1">« {t.text} »</blockquote>
-              <figcaption className="mt-6 pt-5 border-t border-border flex items-center gap-3">
-                <div className="size-10 rounded-full bg-gradient-to-br from-lagoon to-turquoise flex items-center justify-center text-white font-bold">
-                  {t.nom[0]}
-                </div>
-                <div>
-                  <div className="font-semibold text-sm">{t.nom}</div>
-                  <div className="text-xs text-muted-foreground">{t.lieu}</div>
-                </div>
-              </figcaption>
-            </figure>
           ))}
         </div>
       </div>
