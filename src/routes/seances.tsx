@@ -42,7 +42,7 @@ function Page() {
               <div className={`text-sm mb-6 ${f.highlight ? "text-paper/60" : "text-muted-foreground"}`}>
                 {f.duration}{f.age ? ` · ${f.age}` : ""}{f.validity ? ` · ${f.validity}` : ""}
               </div>
-              <Link to="/reserver" search={{ formule: f.id }} className={`h-12 inline-flex items-center justify-center rounded-full font-semibold transition-all ${f.highlight ? "bg-lagoon text-white hover:brightness-110" : "bg-midnight text-paper hover:bg-lagoon"}`}>
+              <Link to="/reserver" className={`h-12 inline-flex items-center justify-center rounded-full font-semibold transition-all ${f.highlight ? "bg-lagoon text-white hover:brightness-110" : "bg-midnight text-paper hover:bg-lagoon"}`}>
                 {f.cta}
               </Link>
             </div>
@@ -66,7 +66,7 @@ function Page() {
             <h2 className="font-display text-3xl font-bold mb-6">Prochaines disponibilités</h2>
             <div className="space-y-2">
               {upcoming.map((s) => (
-                <Link key={s.id} to="/reserver" search={{ slot: s.id }} className="flex items-center justify-between p-4 rounded-2xl bg-white border border-border hover:border-lagoon transition-colors">
+                <Link key={s.id} to="/reserver" className="flex items-center justify-between p-4 rounded-2xl bg-white border border-border hover:border-lagoon transition-colors">
                   <div>
                     <div className="font-semibold capitalize">{formatDateLong(s.date)}</div>
                     <div className="text-sm text-muted-foreground flex items-center gap-1.5 mt-0.5"><Clock className="size-3.5" />{s.time.replace(":", " h ")} – {s.endTime.replace(":", " h ")}</div>
