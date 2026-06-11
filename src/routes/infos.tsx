@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { MapPin, Phone, Mail, MessageCircle, Clock, Car, Plane, Shield } from "lucide-react";
+import { MapPin, Phone, Mail, MessageCircle, Clock, Car, Shield } from "lucide-react";
 import { FAQ, HORAIRES } from "@/lib/data";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
@@ -66,7 +66,7 @@ function Page() {
           <div className="rounded-3xl overflow-hidden border border-border min-h-[360px] bg-secondary">
             <iframe
               title="Plan d’accès à Trapez’cool, Le Helleux, Sainte-Anne"
-              src="https://www.google.com/maps?q=Le+Helleux,+Sainte-Anne,+Guadeloupe&output=embed"
+              src="https://maps.google.com/maps?q=Le%20Helleux%2C%2097180%20Sainte-Anne%2C%20Guadeloupe&t=&z=14&ie=UTF8&iwloc=&output=embed"
               loading="lazy"
               className="w-full h-full min-h-[360px] border-0"
             />
@@ -74,7 +74,7 @@ function Page() {
         </div>
 
         {/* Accès & horaires */}
-        <div className="grid lg:grid-cols-3 gap-5 mb-20">
+        <div className="grid lg:grid-cols-2 gap-5 mb-20">
           <div className="bg-secondary/50 rounded-3xl p-8">
             <Clock className="size-6 text-lagoon mb-4" />
             <h3 className="font-display text-xl font-bold mb-4">Horaires</h3>
@@ -90,16 +90,9 @@ function Page() {
           </div>
           <div className="bg-secondary/50 rounded-3xl p-8">
             <Car className="size-6 text-lagoon mb-4" />
-            <h3 className="font-display text-xl font-bold mb-4">Venir en voiture</h3>
+            <h3 className="font-display text-xl font-bold mb-4">Stationnement</h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Depuis Pointe-à-Pitre, comptez environ 35 minutes par la N4 puis la D118 vers Sainte-Anne. Stationnement gratuit sur place.
-            </p>
-          </div>
-          <div className="bg-secondary/50 rounded-3xl p-8">
-            <Plane className="size-6 text-lagoon mb-4" />
-            <h3 className="font-display text-xl font-bold mb-4">Depuis l’aéroport</h3>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              À 40 minutes en voiture de l’aéroport Pôle Caraïbes. Idéal en complément d’un séjour à Sainte-Anne, Saint-François ou Le Gosier.
+              Parking gratuit sur place, directement à l’entrée du site. Aucune réservation nécessaire pour se garer.
             </p>
           </div>
         </div>
