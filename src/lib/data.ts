@@ -111,7 +111,7 @@ const seedReservations = (slots: Slot[]): Reservation[] => {
     { offsetDays: 1, size: 4, status: "confirme", contact: { firstName: "Claire", lastName: "Lefèvre", email: "claire@example.com", phone: "0690330033" }, formuleId: "envolee" },
     { offsetDays: 2, size: 1, status: "en_attente", contact: { firstName: "Mathis", lastName: "Cabrera", email: "mathis@example.com", phone: "0690440044" }, formuleId: "progression" },
     { offsetDays: 3, size: 2, status: "paye", contact: { firstName: "Léa", lastName: "Renard", email: "lea@example.com", phone: "0690550055" }, formuleId: "envolee" },
-    { offsetDays: 5, size: 6, status: "confirme", contact: { firstName: "Alice", lastName: "Durand", email: "alice@example.com", phone: "0690660066" }, formuleId: "envolee", note: "Anniversaire de Léna" },
+    { offsetDays: 5, size: 6, status: "confirme", contact: { firstName: "Alice", lastName: "Durand", email: "alice@example.com", phone: "0690660066", note: "Anniversaire de Léna" }, formuleId: "envolee" },
     { offsetDays: 7, size: 2, status: "paye", contact: { firstName: "Mehdi", lastName: "Naïm", email: "mehdi@example.com", phone: "0690770077" }, formuleId: "carte5" },
   ];
   const out: Reservation[] = [];
