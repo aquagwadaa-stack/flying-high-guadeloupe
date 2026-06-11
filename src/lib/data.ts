@@ -15,12 +15,64 @@ export type Formule = {
 };
 
 export const FORMULES: Formule[] = [
-  { id: "envolee", name: "Première envolée", tagline: "Une séance complète pour découvrir le trapèze volant en toute confiance.", price: 35, priceLabel: "35 €", duration: "1 h 30", age: "Dès 7 ans", cta: "Choisir cette séance", badge: "Découverte" },
-  { id: "progression", name: "Séance progression", tagline: "Pour pratiquer régulièrement, consolider ses acquis et découvrir de nouvelles figures.", price: 30, priceLabel: "30 €", duration: "1 h 30", cta: "Réserver" },
-  { id: "carte5", name: "Carte 5 séances", tagline: "Une formule flexible pour progresser à son rythme et profiter d’un tarif avantageux.", price: 135, priceLabel: "135 €", duration: "5 × 1 h 30", validity: "Valable 3 mois", cta: "Acheter la carte", badge: "Populaire", highlight: true },
-  { id: "carte10", name: "Carte 10 séances", tagline: "L’engagement long terme, au meilleur tarif. Idéal pour progresser sur plusieurs mois.", price: 250, priceLabel: "250 €", duration: "10 × 1 h 30", validity: "Valable 6 mois", cta: "Acheter la carte", badge: "Économique" },
-  { id: "privee", name: "Séance privée", tagline: "Un accompagnement personnalisé pour une ou deux personnes.", price: 80, priceLabel: "80 €", duration: "1 h", cta: "Demander un créneau" },
-  { id: "groupe", name: "Groupes & événements", tagline: "Anniversaire, association, entreprise ou groupe d’amis : construisons une expérience adaptée.", price: null, priceLabel: "Sur devis", duration: "Modulable", cta: "Recevoir une proposition" },
+  {
+    id: "envolee",
+    name: "Première envolée",
+    tagline: "Une première séance pour découvrir le trapèze avec l’équipe.",
+    price: 35,
+    priceLabel: "35 €",
+    duration: "1 h 30",
+    age: "Dès 7 ans",
+    cta: "Voir les créneaux",
+    badge: "Découverte",
+  },
+  {
+    id: "progression",
+    name: "Séance progression",
+    tagline: "Pour revenir voler, reprendre les bases ou essayer de nouvelles figures.",
+    price: 30,
+    priceLabel: "30 €",
+    duration: "1 h 30",
+    cta: "Voir les créneaux",
+  },
+  {
+    id: "carte5",
+    name: "Carte 5 séances",
+    tagline: "Cinq séances à utiliser au fil de vos envies.",
+    price: 135,
+    priceLabel: "135 €",
+    duration: "5 × 1 h 30",
+    validity: "Valable 3 mois",
+    cta: "Nous écrire",
+  },
+  {
+    id: "carte10",
+    name: "Carte 10 séances",
+    tagline: "Pour celles et ceux qui viennent voler régulièrement.",
+    price: 250,
+    priceLabel: "250 €",
+    duration: "10 × 1 h 30",
+    validity: "Valable 6 mois",
+    cta: "Nous écrire",
+  },
+  {
+    id: "privee",
+    name: "Séance privée",
+    tagline: "Un créneau à organiser directement avec l’équipe.",
+    price: 80,
+    priceLabel: "80 €",
+    duration: "1 h",
+    cta: "Demander un créneau",
+  },
+  {
+    id: "groupe",
+    name: "Groupes & événements",
+    tagline: "Anniversaire, association ou groupe d’amis : parlons-en ensemble.",
+    price: null,
+    priceLabel: "Sur demande",
+    duration: "Selon le groupe",
+    cta: "Nous contacter",
+  },
 ];
 
 export const HORAIRES = [
@@ -42,8 +94,12 @@ export type Slot = {
   type: "decouverte" | "progression" | "privee";
 };
 
-function pad(n: number) { return n.toString().padStart(2, "0"); }
-function isoDate(d: Date) { return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; }
+function pad(n: number) {
+  return n.toString().padStart(2, "0");
+}
+function isoDate(d: Date) {
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
 
 // Pseudo-random deterministic
 function hash(str: string) {
@@ -88,7 +144,11 @@ function generateSlots(): Slot[] {
 }
 
 // ----- Reservations store -----
-export type Participant = { firstName: string; age: number; level: "premiere" | "debutant" | "pratiquant" };
+export type Participant = {
+  firstName: string;
+  age: number;
+  level: "premiere" | "debutant" | "pratiquant";
+};
 export type Reservation = {
   id: string;
   createdAt: string;
@@ -101,24 +161,108 @@ export type Reservation = {
 };
 
 const subscribers = new Set<() => void>();
-function notify() { subscribers.forEach((fn) => fn()); }
+function notify() {
+  subscribers.forEach((fn) => fn());
+}
 
 type State = { slots: Slot[]; reservations: Reservation[] };
 
 const seedReservations = (slots: Slot[]): Reservation[] => {
-  const samples: Array<Partial<Reservation> & { offsetDays: number; size: number; status: Reservation["status"] }> = [
-    { offsetDays: 0, size: 2, status: "confirme", contact: { firstName: "Sophie", lastName: "Marin", email: "sophie@example.com", phone: "0690110011" }, formuleId: "envolee" },
-    { offsetDays: 0, size: 1, status: "paye", contact: { firstName: "Julien", lastName: "Bertin", email: "julien@example.com", phone: "0690220022" }, formuleId: "progression" },
-    { offsetDays: 1, size: 4, status: "confirme", contact: { firstName: "Claire", lastName: "Lefèvre", email: "claire@example.com", phone: "0690330033" }, formuleId: "envolee" },
-    { offsetDays: 2, size: 1, status: "en_attente", contact: { firstName: "Mathis", lastName: "Cabrera", email: "mathis@example.com", phone: "0690440044" }, formuleId: "progression" },
-    { offsetDays: 3, size: 2, status: "paye", contact: { firstName: "Léa", lastName: "Renard", email: "lea@example.com", phone: "0690550055" }, formuleId: "envolee" },
-    { offsetDays: 5, size: 6, status: "confirme", contact: { firstName: "Alice", lastName: "Durand", email: "alice@example.com", phone: "0690660066", note: "Anniversaire de Léna" }, formuleId: "envolee" },
-    { offsetDays: 7, size: 2, status: "paye", contact: { firstName: "Mehdi", lastName: "Naïm", email: "mehdi@example.com", phone: "0690770077" }, formuleId: "carte5" },
+  const samples: Array<
+    Partial<Reservation> & { offsetDays: number; size: number; status: Reservation["status"] }
+  > = [
+    {
+      offsetDays: 0,
+      size: 2,
+      status: "confirme",
+      contact: {
+        firstName: "Sophie",
+        lastName: "Marin",
+        email: "sophie@example.com",
+        phone: "0690110011",
+      },
+      formuleId: "envolee",
+    },
+    {
+      offsetDays: 0,
+      size: 1,
+      status: "paye",
+      contact: {
+        firstName: "Julien",
+        lastName: "Bertin",
+        email: "julien@example.com",
+        phone: "0690220022",
+      },
+      formuleId: "progression",
+    },
+    {
+      offsetDays: 1,
+      size: 4,
+      status: "confirme",
+      contact: {
+        firstName: "Claire",
+        lastName: "Lefèvre",
+        email: "claire@example.com",
+        phone: "0690330033",
+      },
+      formuleId: "envolee",
+    },
+    {
+      offsetDays: 2,
+      size: 1,
+      status: "en_attente",
+      contact: {
+        firstName: "Mathis",
+        lastName: "Cabrera",
+        email: "mathis@example.com",
+        phone: "0690440044",
+      },
+      formuleId: "progression",
+    },
+    {
+      offsetDays: 3,
+      size: 2,
+      status: "paye",
+      contact: {
+        firstName: "Léa",
+        lastName: "Renard",
+        email: "lea@example.com",
+        phone: "0690550055",
+      },
+      formuleId: "envolee",
+    },
+    {
+      offsetDays: 5,
+      size: 6,
+      status: "confirme",
+      contact: {
+        firstName: "Alice",
+        lastName: "Durand",
+        email: "alice@example.com",
+        phone: "0690660066",
+        note: "Anniversaire de Léna",
+      },
+      formuleId: "envolee",
+    },
+    {
+      offsetDays: 7,
+      size: 2,
+      status: "paye",
+      contact: {
+        firstName: "Mehdi",
+        lastName: "Naïm",
+        email: "mehdi@example.com",
+        phone: "0690770077",
+      },
+      formuleId: "carte5",
+    },
   ];
   const out: Reservation[] = [];
-  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
   samples.forEach((s, i) => {
-    const target = new Date(today); target.setDate(today.getDate() + s.offsetDays);
+    const target = new Date(today);
+    target.setDate(today.getDate() + s.offsetDays);
     const date = isoDate(target);
     const candidate = slots.find((sl) => sl.date === date);
     if (!candidate) return;
@@ -153,11 +297,20 @@ for (const r of state.reservations) {
   if (s) s.booked = Math.min(s.capacity, s.booked + r.participants.length);
 }
 
-function subscribe(cb: () => void) { subscribers.add(cb); return () => subscribers.delete(cb); }
-function getSnapshot() { return state; }
+function subscribe(cb: () => void) {
+  subscribers.add(cb);
+  return () => subscribers.delete(cb);
+}
+function getSnapshot() {
+  return state;
+}
 
 export function useStore<T>(selector: (s: State) => T): T {
-  return useSyncExternalStore(subscribe, () => selector(state), () => selector(state));
+  return useSyncExternalStore(
+    subscribe,
+    () => selector(state),
+    () => selector(state),
+  );
 }
 
 export function addReservation(r: Omit<Reservation, "id" | "createdAt" | "status">): Reservation {
@@ -177,7 +330,11 @@ export function addReservation(r: Omit<Reservation, "id" | "createdAt" | "status
 export function updateReservationStatus(id: string, status: Reservation["status"]) {
   const r = state.reservations.find((x) => x.id === id);
   if (!r) return;
-  if ((status === "annule" || status === "rembourse") && r.status !== "annule" && r.status !== "rembourse") {
+  if (
+    (status === "annule" || status === "rembourse") &&
+    r.status !== "annule" &&
+    r.status !== "rembourse"
+  ) {
     const slot = state.slots.find((s) => s.id === r.slotId);
     if (slot) slot.booked = Math.max(0, slot.booked - r.participants.length);
   }
@@ -187,11 +344,18 @@ export function updateReservationStatus(id: string, status: Reservation["status"
 
 // ----- Credits / comptes carte -----
 const CREDITS_KEY = "trapezcool_credits_v1";
-type CreditsStore = Record<string, { credits: number; firstName?: string; lastName?: string; phone?: string }>;
+type CreditsStore = Record<
+  string,
+  { credits: number; firstName?: string; lastName?: string; phone?: string }
+>;
 
 function readCredits(): CreditsStore {
   if (typeof window === "undefined") return {};
-  try { return JSON.parse(localStorage.getItem(CREDITS_KEY) || "{}"); } catch { return {}; }
+  try {
+    return JSON.parse(localStorage.getItem(CREDITS_KEY) || "{}");
+  } catch {
+    return {};
+  }
 }
 function writeCredits(s: CreditsStore) {
   if (typeof window === "undefined") return;
@@ -202,7 +366,11 @@ export function getAccountByEmail(email: string) {
   const s = readCredits();
   return s[key];
 }
-export function addCreditsForAccount(email: string, credits: number, info: { firstName?: string; lastName?: string; phone?: string } = {}) {
+export function addCreditsForAccount(
+  email: string,
+  credits: number,
+  info: { firstName?: string; lastName?: string; phone?: string } = {},
+) {
   const key = email.trim().toLowerCase();
   const s = readCredits();
   const existing = s[key] || { credits: 0 };
@@ -210,7 +378,7 @@ export function addCreditsForAccount(email: string, credits: number, info: { fir
   writeCredits(s);
   return s[key];
 }
-export function useOneCredit(email: string) {
+export function consumeCredit(email: string) {
   const key = email.trim().toLowerCase();
   const s = readCredits();
   if (!s[key] || s[key].credits <= 0) return null;
@@ -219,9 +387,30 @@ export function useOneCredit(email: string) {
   return s[key];
 }
 
-export const FRENCH_MONTHS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+export const FRENCH_MONTHS = [
+  "janvier",
+  "février",
+  "mars",
+  "avril",
+  "mai",
+  "juin",
+  "juillet",
+  "août",
+  "septembre",
+  "octobre",
+  "novembre",
+  "décembre",
+];
 export const FRENCH_DAYS_SHORT = ["dim", "lun", "mar", "mer", "jeu", "ven", "sam"];
-export const FRENCH_DAYS_LONG = ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"];
+export const FRENCH_DAYS_LONG = [
+  "dimanche",
+  "lundi",
+  "mardi",
+  "mercredi",
+  "jeudi",
+  "vendredi",
+  "samedi",
+];
 
 export function formatDateLong(iso: string) {
   const d = new Date(iso + "T00:00:00");
@@ -234,18 +423,54 @@ export function formatDateShort(iso: string) {
 }
 
 export const FAQ = [
-  { q: "Faut-il avoir déjà pratiqué ?", a: "Pas du tout. La majorité de nos élèves découvre le trapèze chez nous. L’équipe vous guide à chaque étape." },
-  { q: "À partir de quel âge peut-on participer ?", a: "Dès 7 ans, sans limite d’âge maximale. Nous adaptons l’intensité à chaque participant." },
-  { q: "Faut-il être particulièrement sportif ?", a: "Non. Une condition physique normale suffit. Le trapèze sollicite surtout la coordination, pas la force." },
-  { q: "Quelle tenue prévoir ?", a: "Une tenue de sport confortable couvrant les genoux pour éviter les frottements. Évitez les bijoux et attachez les cheveux longs." },
-  { q: "Que se passe-t-il en cas de mauvais temps ?", a: "En cas d’intempéries, la séance est reportée à une autre date sans frais. Nous vous prévenons par téléphone ou WhatsApp." },
-  { q: "Peut-on venir simplement regarder ?", a: "Oui, les accompagnateurs sont les bienvenus pour observer sans réserver." },
-  { q: "Les accompagnateurs doivent-ils réserver ?", a: "Non, seuls les participants à l’activité réservent une place." },
-  { q: "Comment modifier une réservation ?", a: "Contactez-nous par téléphone ou WhatsApp au +590 690 19 34 28 au moins 48h à l’avance." },
+  {
+    q: "Faut-il avoir déjà pratiqué ?",
+    a: "Pas du tout. La majorité de nos élèves découvre le trapèze chez nous. L’équipe vous guide à chaque étape.",
+  },
+  {
+    q: "À partir de quel âge peut-on participer ?",
+    a: "Les séances sont accessibles dès 7 ans. L’équipe adapte les exercices à l’âge et au niveau de chacun.",
+  },
+  {
+    q: "Faut-il être particulièrement sportif ?",
+    a: "Non. Il n’est pas nécessaire d’être un grand sportif pour essayer. L’équipe vous accompagne progressivement.",
+  },
+  {
+    q: "Quelle tenue prévoir ?",
+    a: "Une tenue de sport confortable couvrant les genoux pour éviter les frottements. Évitez les bijoux et attachez les cheveux longs.",
+  },
+  {
+    q: "Que se passe-t-il en cas de mauvais temps ?",
+    a: "L’activité dépend de la météo. Si les conditions ne permettent pas de voler, l’équipe vous informe par téléphone ou WhatsApp.",
+  },
+  {
+    q: "Peut-on venir simplement regarder ?",
+    a: "Oui, les accompagnateurs sont les bienvenus pour observer sans réserver.",
+  },
+  {
+    q: "Les accompagnateurs doivent-ils réserver ?",
+    a: "Non, seuls les participants à l’activité réservent une place.",
+  },
+  {
+    q: "Comment modifier une réservation ?",
+    a: "Contactez-nous dès que possible par téléphone ou WhatsApp au +590 690 19 34 28.",
+  },
 ];
 
 export const TEMOIGNAGES = [
-  { nom: "Sophie", lieu: "Sainte-Anne", text: "Une équipe rassurante et une expérience incroyable. Les enfants ont immédiatement voulu recommencer !" },
-  { nom: "Julien", lieu: "Le Gosier", text: "Je pensais ne jamais oser monter. L’accompagnement m’a mis en confiance dès le premier passage." },
-  { nom: "Claire", lieu: "Lyon", text: "Une activité originale à faire pendant les vacances. Très belle découverte en famille." },
+  {
+    nom: "Sophie",
+    lieu: "Sainte-Anne",
+    text: "Une équipe rassurante et une expérience incroyable. Les enfants ont immédiatement voulu recommencer !",
+  },
+  {
+    nom: "Julien",
+    lieu: "Le Gosier",
+    text: "Je pensais ne jamais oser monter. L’accompagnement m’a mis en confiance dès le premier passage.",
+  },
+  {
+    nom: "Claire",
+    lieu: "Lyon",
+    text: "Une activité originale à faire pendant les vacances. Très belle découverte en famille.",
+  },
 ];

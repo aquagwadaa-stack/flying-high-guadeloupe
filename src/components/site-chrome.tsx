@@ -1,6 +1,6 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
-import { Menu, X, Phone, Mail, MessageCircle, Instagram, Facebook } from "lucide-react";
+import { Menu, X, Phone, Mail, MessageCircle, Facebook } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV = [
@@ -41,17 +41,19 @@ function SiteHeader({ transparent }: { transparent: boolean }) {
   const scrolled = useScrolled();
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
-  useEffect(() => { setOpen(false); }, [pathname]);
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   const solid = !transparent || scrolled;
 
   return (
-    <header className={cn(
-      "fixed top-0 inset-x-0 z-50 transition-all duration-300",
-      solid
-        ? "bg-background/85 backdrop-blur-md border-b border-border"
-        : "bg-transparent"
-    )}>
+    <header
+      className={cn(
+        "fixed top-0 inset-x-0 z-50 transition-all duration-300",
+        solid ? "bg-background/85 backdrop-blur-md border-b border-border" : "bg-transparent",
+      )}
+    >
       <div className="max-w-7xl mx-auto px-5 lg:px-8 h-16 lg:h-20 flex items-center justify-between gap-6">
         <Link to="/" className="flex items-center gap-2 group shrink-0">
           <Logo color={solid ? "midnight" : "paper"} />
@@ -74,6 +76,7 @@ function SiteHeader({ transparent }: { transparent: boolean }) {
         <div className="flex items-center gap-3">
           <Link
             to="/reserver"
+            search={{ formule: "envolee" }}
             className="hidden sm:inline-flex items-center h-10 px-5 rounded-full bg-lagoon text-white text-sm font-semibold hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-lagoon/20"
           >
             Réserver une séance
@@ -84,7 +87,7 @@ function SiteHeader({ transparent }: { transparent: boolean }) {
             aria-label="Menu"
             className={cn(
               "lg:hidden h-10 w-10 inline-flex items-center justify-center rounded-full",
-              solid ? "bg-secondary text-foreground" : "bg-white/15 text-white backdrop-blur"
+              solid ? "bg-secondary text-foreground" : "bg-white/15 text-white backdrop-blur",
             )}
           >
             {open ? <X className="size-5" /> : <Menu className="size-5" />}
@@ -106,6 +109,7 @@ function SiteHeader({ transparent }: { transparent: boolean }) {
             ))}
             <Link
               to="/reserver"
+              search={{ formule: "envolee" }}
               className="mt-4 inline-flex items-center justify-center h-12 rounded-full bg-lagoon text-white font-semibold"
             >
               Réserver une séance
@@ -123,7 +127,13 @@ function Logo({ color = "midnight" }: { color?: "midnight" | "paper" }) {
     <div className={cn("flex items-center gap-2.5", cls)}>
       <span className="relative inline-flex size-9 rounded-full bg-lagoon items-center justify-center overflow-hidden">
         <svg viewBox="0 0 32 32" className="size-6 text-white" fill="none" aria-hidden>
-          <path d="M4 10 L16 18 L28 10" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+          <path
+            d="M4 10 L16 18 L28 10"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
           <circle cx="16" cy="22" r="2.5" fill="currentColor" />
         </svg>
         <span className="absolute -bottom-1 -right-1 size-3 rounded-full bg-solar" />
@@ -143,48 +153,83 @@ function SiteFooter() {
           <div className="space-y-6">
             <Logo color="paper" />
             <p className="text-paper/70 text-sm leading-relaxed max-w-xs">
-              L’école de trapèze volant en Guadeloupe. Venez vivre une expérience aérienne unique au Helleux, Sainte-Anne.
+              École de trapèze volant au Helleux, entre Sainte-Anne et Saint-François. Débutants et
+              habitués sont les bienvenus.
             </p>
             <div className="flex gap-3">
-              <a href="https://wa.me/590690193428" className="inline-flex items-center justify-center size-10 rounded-full bg-white/10 hover:bg-lagoon transition-colors" aria-label="WhatsApp"><MessageCircle className="size-4" /></a>
-              <a href="#" className="inline-flex items-center justify-center size-10 rounded-full bg-white/10 hover:bg-lagoon transition-colors" aria-label="Instagram"><Instagram className="size-4" /></a>
-              <a href="#" className="inline-flex items-center justify-center size-10 rounded-full bg-white/10 hover:bg-lagoon transition-colors" aria-label="Facebook"><Facebook className="size-4" /></a>
+              <a
+                href="https://wa.me/590690193428"
+                className="inline-flex items-center justify-center size-10 rounded-full bg-white/10 hover:bg-lagoon transition-colors"
+                aria-label="WhatsApp"
+              >
+                <MessageCircle className="size-4" />
+              </a>
+              <a
+                href="https://www.facebook.com/people/Trapezcool-ecole-de-trapeze-volant/100063718410178/"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center justify-center size-10 rounded-full bg-white/10 hover:bg-lagoon transition-colors"
+                aria-label="Facebook"
+              >
+                <Facebook className="size-4" />
+              </a>
             </div>
           </div>
           <div>
-            <h4 className="text-xs uppercase tracking-widest font-bold text-paper/40 mb-5">Navigation</h4>
+            <h4 className="text-xs uppercase tracking-widest font-bold text-paper/40 mb-5">
+              Navigation
+            </h4>
             <ul className="space-y-3 text-sm">
               {NAV.map((n) => (
                 <li key={n.to}>
-                  <Link to={n.to} className="text-paper/80 hover:text-lagoon transition-colors">{n.label}</Link>
+                  <Link to={n.to} className="text-paper/80 hover:text-lagoon transition-colors">
+                    {n.label}
+                  </Link>
                 </li>
               ))}
             </ul>
           </div>
           <div>
-            <h4 className="text-xs uppercase tracking-widest font-bold text-paper/40 mb-5">Contact</h4>
+            <h4 className="text-xs uppercase tracking-widest font-bold text-paper/40 mb-5">
+              Contact
+            </h4>
             <ul className="space-y-3 text-sm text-paper/80">
-              <li className="flex items-start gap-2"><Phone className="size-4 mt-0.5 text-lagoon shrink-0" /><a href="tel:+590690193428" className="hover:text-white">+590 690 19 34 28</a></li>
-              <li className="flex items-start gap-2"><MessageCircle className="size-4 mt-0.5 text-lagoon shrink-0" /><a href="https://wa.me/590690193428" className="hover:text-white">WhatsApp</a></li>
-              <li className="flex items-start gap-2"><Mail className="size-4 mt-0.5 text-lagoon shrink-0" /><a href="mailto:trapezcool971@gmail.com" className="hover:text-white break-all">trapezcool971@gmail.com</a></li>
+              <li className="flex items-start gap-2">
+                <Phone className="size-4 mt-0.5 text-lagoon shrink-0" />
+                <a href="tel:+590690193428" className="hover:text-white">
+                  +590 690 19 34 28
+                </a>
+              </li>
+              <li className="flex items-start gap-2">
+                <MessageCircle className="size-4 mt-0.5 text-lagoon shrink-0" />
+                <a href="https://wa.me/590690193428" className="hover:text-white">
+                  WhatsApp
+                </a>
+              </li>
+              <li className="flex items-start gap-2">
+                <Mail className="size-4 mt-0.5 text-lagoon shrink-0" />
+                <a href="mailto:trapezcool971@gmail.com" className="hover:text-white break-all">
+                  trapezcool971@gmail.com
+                </a>
+              </li>
             </ul>
           </div>
           <div>
-            <h4 className="text-xs uppercase tracking-widest font-bold text-paper/40 mb-5">Adresse</h4>
+            <h4 className="text-xs uppercase tracking-widest font-bold text-paper/40 mb-5">
+              Adresse
+            </h4>
             <p className="text-sm text-paper/80 leading-relaxed">
-              Le Helleux<br />
-              97180 Sainte-Anne<br />
+              Le Helleux
+              <br />
+              97180 Sainte-Anne
+              <br />
               Guadeloupe
             </p>
             <p className="text-sm text-paper/60 mt-4">Ouvert toute l’année</p>
           </div>
         </div>
-        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-xs text-paper/50">
+        <div className="pt-8 border-t border-white/10 text-xs text-paper/50">
           <p>© {new Date().getFullYear()} Trapez’cool. Tous droits réservés.</p>
-          <div className="flex gap-6">
-            <Link to="/infos" className="hover:text-paper">Mentions légales</Link>
-            <Link to="/infos" className="hover:text-paper">CGV</Link>
-          </div>
         </div>
       </div>
     </footer>
@@ -197,10 +242,17 @@ function MobileActionBar() {
   return (
     <div className="lg:hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-40 w-[calc(100%-2rem)] max-w-md">
       <div className="bg-midnight/95 backdrop-blur-md rounded-full p-1.5 flex gap-1.5 shadow-2xl shadow-midnight/40 ring-1 ring-white/10">
-        <a href="https://wa.me/590690193428" className="flex-1 h-11 rounded-full bg-[#25D366] text-white font-semibold text-sm inline-flex items-center justify-center gap-2">
+        <a
+          href="https://wa.me/590690193428"
+          className="flex-1 h-11 rounded-full bg-[#25D366] text-white font-semibold text-sm inline-flex items-center justify-center gap-2"
+        >
           <MessageCircle className="size-4" /> WhatsApp
         </a>
-        <Link to="/reserver" className="flex-[1.4] h-11 rounded-full bg-lagoon text-white font-semibold text-sm inline-flex items-center justify-center">
+        <Link
+          to="/reserver"
+          search={{ formule: "envolee" }}
+          className="flex-[1.4] h-11 rounded-full bg-lagoon text-white font-semibold text-sm inline-flex items-center justify-center"
+        >
           Réserver
         </Link>
       </div>
