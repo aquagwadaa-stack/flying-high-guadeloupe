@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SeancesRouteImport } from './routes/seances'
 import { Route as ReserverRouteImport } from './routes/reserver'
+import { Route as InfosRouteImport } from './routes/infos'
+import { Route as GroupesRouteImport } from './routes/groupes'
 import { Route as DecouvrirRouteImport } from './routes/decouvrir'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -22,6 +24,16 @@ const SeancesRoute = SeancesRouteImport.update({
 const ReserverRoute = ReserverRouteImport.update({
   id: '/reserver',
   path: '/reserver',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InfosRoute = InfosRouteImport.update({
+  id: '/infos',
+  path: '/infos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GroupesRoute = GroupesRouteImport.update({
+  id: '/groupes',
+  path: '/groupes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DecouvrirRoute = DecouvrirRouteImport.update({
@@ -38,12 +50,16 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/decouvrir': typeof DecouvrirRoute
+  '/groupes': typeof GroupesRoute
+  '/infos': typeof InfosRoute
   '/reserver': typeof ReserverRoute
   '/seances': typeof SeancesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/decouvrir': typeof DecouvrirRoute
+  '/groupes': typeof GroupesRoute
+  '/infos': typeof InfosRoute
   '/reserver': typeof ReserverRoute
   '/seances': typeof SeancesRoute
 }
@@ -51,20 +67,37 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/decouvrir': typeof DecouvrirRoute
+  '/groupes': typeof GroupesRoute
+  '/infos': typeof InfosRoute
   '/reserver': typeof ReserverRoute
   '/seances': typeof SeancesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/decouvrir' | '/reserver' | '/seances'
+  fullPaths:
+    | '/'
+    | '/decouvrir'
+    | '/groupes'
+    | '/infos'
+    | '/reserver'
+    | '/seances'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/decouvrir' | '/reserver' | '/seances'
-  id: '__root__' | '/' | '/decouvrir' | '/reserver' | '/seances'
+  to: '/' | '/decouvrir' | '/groupes' | '/infos' | '/reserver' | '/seances'
+  id:
+    | '__root__'
+    | '/'
+    | '/decouvrir'
+    | '/groupes'
+    | '/infos'
+    | '/reserver'
+    | '/seances'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DecouvrirRoute: typeof DecouvrirRoute
+  GroupesRoute: typeof GroupesRoute
+  InfosRoute: typeof InfosRoute
   ReserverRoute: typeof ReserverRoute
   SeancesRoute: typeof SeancesRoute
 }
@@ -83,6 +116,20 @@ declare module '@tanstack/react-router' {
       path: '/reserver'
       fullPath: '/reserver'
       preLoaderRoute: typeof ReserverRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/infos': {
+      id: '/infos'
+      path: '/infos'
+      fullPath: '/infos'
+      preLoaderRoute: typeof InfosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/groupes': {
+      id: '/groupes'
+      path: '/groupes'
+      fullPath: '/groupes'
+      preLoaderRoute: typeof GroupesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/decouvrir': {
@@ -105,9 +152,21 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DecouvrirRoute: DecouvrirRoute,
+  GroupesRoute: GroupesRoute,
+  InfosRoute: InfosRoute,
   ReserverRoute: ReserverRoute,
   SeancesRoute: SeancesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
