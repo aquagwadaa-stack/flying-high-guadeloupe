@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { ArrowLeft, ArrowRight, Check, Clock, Users, CreditCard, Calendar as CalendarIcon } from "lucide-react";
-import { FORMULES, addReservation, formatDateLong, useStore, type Participant } from "@/lib/data";
+import { ArrowLeft, ArrowRight, Check, Clock, Users, CreditCard, Calendar as CalendarIcon, Ticket, Sparkles } from "lucide-react";
+import { FORMULES, addReservation, formatDateLong, useStore, getAccountByEmail, addCreditsForAccount, useOneCredit, type Participant } from "@/lib/data";
 
 export const Route = createFileRoute("/reserver")({
   head: () => ({
@@ -23,11 +23,15 @@ function Page() {
   const [slotId, setSlotId] = useState<string>("");
   const [contact, setContact] = useState({ firstName: "", lastName: "", email: "", phone: "", note: "", accept: false });
   const [participants, setParticipants] = useState<Participant[]>([{ firstName: "", age: 12, level: "premiere" }]);
-  const [confirmation, setConfirmation] = useState<{ id: string } | null>(null);
+  const [confirmation, setConfirmation] = useState<{ id: string; accountCredits?: number; usedCredit?: boolean } | null>(null);
+  const [creditMode, setCreditMode] = useState(false);
+  const [creditEmail, setCreditEmail] = useState("");
+  const [creditLookup, setCreditLookup] = useState<{ status: "idle" | "notfound" | "found"; credits: number }>({ status: "idle", credits: 0 });
 
   const formule = FORMULES.find((f) => f.id === formuleId)!;
   const slot = slots.find((s) => s.id === slotId);
-  const total = (formule.price ?? 0) * count;
+  const isCardPurchase = formuleId === "carte5" || formuleId === "carte10";
+  const total = creditMode ? 0 : (formule.price ?? 0) * count;
 
   const upcomingByDate = useMemo(() => {
     const map = new Map<string, typeof slots>();
@@ -55,6 +59,14 @@ function Page() {
 
   const submit = () => {
     if (!slot) return;
+    let usedCredit = false;
+    let accountCredits: number | undefined;
+    if (creditMode) {
+      const acc = useOneCredit(contact.email);
+      if (!acc) return;
+      usedCredit = true;
+      accountCredits = acc.credits;
+    }
     const r = addReservation({
       slotId,
       formuleId,
@@ -62,7 +74,12 @@ function Page() {
       participants,
       total,
     });
-    setConfirmation({ id: r.id });
+    if (isCardPurchase && !creditMode) {
+      const credits = formuleId === "carte10" ? 10 : 5;
+      const acc = addCreditsForAccount(contact.email, credits, { firstName: contact.firstName, lastName: contact.lastName, phone: contact.phone });
+      accountCredits = acc.credits;
+    }
+    setConfirmation({ id: r.id, accountCredits, usedCredit });
     setStep(6);
   };
 
@@ -83,6 +100,61 @@ function Page() {
         <h1 className="font-display text-4xl lg:text-5xl font-bold tracking-tight mb-3">Réserver votre envol</h1>
         <p className="text-muted-foreground mb-10">Quelques étapes simples et c’est validé.</p>
 
+        {step < 6 && (
+          <div className="mb-8 rounded-3xl border border-lagoon/20 bg-lagoon/5 p-5 lg:p-6">
+            {!creditMode ? (
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-start gap-3">
+                  <span className="size-10 rounded-2xl bg-white text-lagoon flex items-center justify-center shrink-0"><Ticket className="size-5" /></span>
+                  <div>
+                    <div className="font-display font-bold">Vous avez déjà une carte Trapez’cool&nbsp;?</div>
+                    <p className="text-sm text-muted-foreground">Utilisez un crédit de votre carte 5 ou 10 séances pour cette réservation.</p>
+                  </div>
+                </div>
+                <div className="flex gap-2 w-full sm:w-auto">
+                  <input
+                    type="email"
+                    placeholder="Votre e-mail"
+                    value={creditEmail}
+                    onChange={(e) => { setCreditEmail(e.target.value); setCreditLookup({ status: "idle", credits: 0 }); }}
+                    className="flex-1 sm:w-64 px-4 h-11 rounded-full border border-border bg-white text-sm focus:border-lagoon outline-none"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const acc = getAccountByEmail(creditEmail);
+                      if (acc && acc.credits > 0) {
+                        setCreditLookup({ status: "found", credits: acc.credits });
+                        setCreditMode(true);
+                        setFormuleId("envolee");
+                        setCount(1);
+                        setContact((c) => ({ ...c, email: creditEmail, firstName: acc.firstName || c.firstName, lastName: acc.lastName || c.lastName, phone: acc.phone || c.phone }));
+                      } else {
+                        setCreditLookup({ status: "notfound", credits: 0 });
+                      }
+                    }}
+                    className="h-11 px-5 rounded-full bg-midnight text-paper text-sm font-semibold"
+                  >Vérifier</button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-start gap-3">
+                  <span className="size-10 rounded-2xl bg-turquoise text-white flex items-center justify-center shrink-0"><Sparkles className="size-5" /></span>
+                  <div>
+                    <div className="font-display font-bold">Compte trouvé · {creditLookup.credits} crédit{creditLookup.credits > 1 ? "s" : ""} disponible{creditLookup.credits > 1 ? "s" : ""}</div>
+                    <p className="text-sm text-muted-foreground">Cette réservation utilisera 1 crédit. Aucun paiement ne sera demandé.</p>
+                  </div>
+                </div>
+                <button type="button" onClick={() => { setCreditMode(false); setCreditLookup({ status: "idle", credits: 0 }); }} className="h-10 px-4 rounded-full border border-border bg-white text-sm font-semibold">Annuler</button>
+              </div>
+            )}
+            {creditLookup.status === "notfound" && !creditMode && (
+              <p className="text-sm text-coral mt-3">Aucun compte ne correspond à cet e-mail, ou aucun crédit disponible.</p>
+            )}
+          </div>
+        )}
+
         {/* Stepper */}
         <div className="hidden md:flex items-center gap-2 mb-10 text-xs font-medium">
           {steps.map((label, i) => (
@@ -101,17 +173,21 @@ function Page() {
             {step === 0 && (
               <div>
                 <h2 className="font-display text-2xl font-bold mb-6">Choisissez votre formule</h2>
+                {creditMode && <p className="text-sm text-muted-foreground mb-4">Mode crédit actif : le tarif est offert par votre carte.</p>}
                 <div className="grid sm:grid-cols-2 gap-3">
                   {FORMULES.filter((f) => f.price !== null).map((f) => (
                     <button key={f.id} type="button" onClick={() => setFormuleId(f.id)} className={`text-left p-5 rounded-2xl border-2 transition-all ${formuleId === f.id ? "border-lagoon bg-lagoon/5" : "border-border hover:border-lagoon/30"}`}>
                       <div className="flex justify-between items-baseline mb-2">
                         <div className="font-display font-bold text-lg">{f.name}</div>
-                        <div className="font-display font-bold text-xl">{f.priceLabel}</div>
+                        <div className="font-display font-bold text-xl">{creditMode ? "1 crédit" : f.priceLabel}</div>
                       </div>
                       <div className="text-sm text-muted-foreground">{f.tagline}</div>
                     </button>
                   ))}
                 </div>
+                {isCardPurchase && !creditMode && (
+                  <p className="text-xs text-muted-foreground mt-4 flex items-start gap-2"><Sparkles className="size-3.5 text-lagoon mt-0.5" /> En achetant cette carte, un compte sera automatiquement créé avec votre e-mail. Vous pourrez ensuite réserver vos prochaines séances en saisissant simplement votre adresse.</p>
+                )}
               </div>
             )}
 
@@ -225,6 +301,16 @@ function Page() {
                 <h2 className="font-display text-3xl lg:text-4xl font-bold mb-3">Votre envol est réservé !</h2>
                 <p className="text-muted-foreground max-w-md mx-auto mb-2">Vous allez recevoir toutes les informations pratiques par e-mail. Rendez-vous 15 minutes avant le début de votre séance.</p>
                 <p className="text-xs text-muted-foreground mb-8">Référence : <span className="font-mono font-bold text-foreground">{confirmation.id}</span></p>
+                {(confirmation.accountCredits !== undefined) && (
+                  <div className="max-w-md mx-auto bg-lagoon/5 border border-lagoon/20 rounded-2xl p-5 mb-8 text-left">
+                    <div className="flex items-center gap-2 font-display font-bold mb-1"><Ticket className="size-4 text-lagoon" /> {confirmation.usedCredit ? "Crédit utilisé" : "Votre compte est créé"}</div>
+                    <p className="text-sm text-muted-foreground">
+                      {confirmation.usedCredit
+                        ? `Il vous reste ${confirmation.accountCredits} crédit${confirmation.accountCredits > 1 ? "s" : ""} sur votre carte.`
+                        : `${confirmation.accountCredits} crédits ont été ajoutés à votre carte. Pour vos prochaines réservations, saisissez simplement votre e-mail dans le bandeau « J’ai déjà une carte ».`}
+                    </p>
+                  </div>
+                )}
                 <div className="flex flex-wrap gap-3 justify-center">
                   <button className="inline-flex items-center gap-2 h-12 px-6 rounded-full bg-midnight text-paper font-semibold"><CalendarIcon className="size-4" /> Ajouter au calendrier</button>
                   <a href="https://wa.me/590690193428" className="inline-flex items-center h-12 px-6 rounded-full bg-secondary font-semibold">Contacter Trapez’cool</a>
@@ -240,7 +326,7 @@ function Page() {
                 </button>
                 {step === 5 ? (
                   <button type="button" disabled={!canNext} onClick={submit} className="inline-flex items-center gap-2 px-6 h-11 rounded-full bg-lagoon text-white text-sm font-semibold disabled:opacity-40 hover:brightness-110 shadow-lg shadow-lagoon/20">
-                    <CreditCard className="size-4" /> Payer {total} €
+                    {creditMode ? (<><Ticket className="size-4" /> Confirmer (1 crédit)</>) : (<><CreditCard className="size-4" /> Payer {total} €</>)}
                   </button>
                 ) : (
                   <button type="button" disabled={!canNext} onClick={goNext} className="inline-flex items-center gap-2 px-6 h-11 rounded-full bg-midnight text-paper text-sm font-semibold disabled:opacity-40 hover:bg-lagoon transition-colors">

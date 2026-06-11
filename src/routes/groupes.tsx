@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Cake, Building2, Users, Sparkles, Check, Calendar, MessageCircle, Mail } from "lucide-react";
-import groupSchool from "@/assets/group-school.jpg";
+import groupSchoolAsset from "@/assets/group-school.jpg.asset.json";
+const groupSchool = groupSchoolAsset.url;
 
 export const Route = createFileRoute("/groupes")({
   head: () => ({

@@ -18,6 +18,7 @@ export const FORMULES: Formule[] = [
   { id: "envolee", name: "Première envolée", tagline: "Une séance complète pour découvrir le trapèze volant en toute confiance.", price: 35, priceLabel: "35 €", duration: "1 h 30", age: "Dès 7 ans", cta: "Choisir cette séance", badge: "Découverte" },
   { id: "progression", name: "Séance progression", tagline: "Pour pratiquer régulièrement, consolider ses acquis et découvrir de nouvelles figures.", price: 30, priceLabel: "30 €", duration: "1 h 30", cta: "Réserver" },
   { id: "carte5", name: "Carte 5 séances", tagline: "Une formule flexible pour progresser à son rythme et profiter d’un tarif avantageux.", price: 135, priceLabel: "135 €", duration: "5 × 1 h 30", validity: "Valable 3 mois", cta: "Acheter la carte", badge: "Populaire", highlight: true },
+  { id: "carte10", name: "Carte 10 séances", tagline: "L’engagement long terme, au meilleur tarif. Idéal pour progresser sur plusieurs mois.", price: 250, priceLabel: "250 €", duration: "10 × 1 h 30", validity: "Valable 6 mois", cta: "Acheter la carte", badge: "Économique" },
   { id: "privee", name: "Séance privée", tagline: "Un accompagnement personnalisé pour une ou deux personnes.", price: 80, priceLabel: "80 €", duration: "1 h", cta: "Demander un créneau" },
   { id: "groupe", name: "Groupes & événements", tagline: "Anniversaire, association, entreprise ou groupe d’amis : construisons une expérience adaptée.", price: null, priceLabel: "Sur devis", duration: "Modulable", cta: "Recevoir une proposition" },
 ];
@@ -182,6 +183,40 @@ export function updateReservationStatus(id: string, status: Reservation["status"
   }
   r.status = status;
   notify();
+}
+
+// ----- Credits / comptes carte -----
+const CREDITS_KEY = "trapezcool_credits_v1";
+type CreditsStore = Record<string, { credits: number; firstName?: string; lastName?: string; phone?: string }>;
+
+function readCredits(): CreditsStore {
+  if (typeof window === "undefined") return {};
+  try { return JSON.parse(localStorage.getItem(CREDITS_KEY) || "{}"); } catch { return {}; }
+}
+function writeCredits(s: CreditsStore) {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(CREDITS_KEY, JSON.stringify(s));
+}
+export function getAccountByEmail(email: string) {
+  const key = email.trim().toLowerCase();
+  const s = readCredits();
+  return s[key];
+}
+export function addCreditsForAccount(email: string, credits: number, info: { firstName?: string; lastName?: string; phone?: string } = {}) {
+  const key = email.trim().toLowerCase();
+  const s = readCredits();
+  const existing = s[key] || { credits: 0 };
+  s[key] = { ...existing, ...info, credits: existing.credits + credits };
+  writeCredits(s);
+  return s[key];
+}
+export function useOneCredit(email: string) {
+  const key = email.trim().toLowerCase();
+  const s = readCredits();
+  if (!s[key] || s[key].credits <= 0) return null;
+  s[key].credits -= 1;
+  writeCredits(s);
+  return s[key];
 }
 
 export const FRENCH_MONTHS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
