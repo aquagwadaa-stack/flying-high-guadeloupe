@@ -26,7 +26,7 @@ function Page() {
   const slots = useStore((s) => s.slots);
   const upcoming = slots.filter((s) => s.booked < s.capacity).slice(0, 8);
   return (
-    <div className="pt-32 lg:pt-40 pb-24 px-5 lg:px-8">
+    <div className="pt-32 lg:pt-40 pb-24 px-5 lg:px-8 overflow-hidden">
       <div className="max-w-7xl mx-auto">
         <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-lagoon mb-6">
           <span className="h-px w-6 bg-lagoon" /> Séances & tarifs
@@ -40,10 +40,10 @@ function Page() {
         </p>
 
         <div className="grid lg:grid-cols-3 gap-5 mb-20">
-          {FORMULES.map((f) => (
+          {FORMULES.map((f, index) => (
             <div
               key={f.id}
-              className={`rounded-3xl p-8 border flex flex-col ${f.highlight ? "bg-midnight text-paper border-midnight" : "bg-white border-border"}`}
+              className={`rounded-3xl p-8 border flex flex-col shadow-lg shadow-midnight/5 hover:-translate-y-1 transition-transform ${f.highlight ? "bg-midnight text-paper border-midnight" : index % 3 === 1 ? "bg-solar/70 border-white" : index % 3 === 2 ? "bg-coral/15 border-white" : "bg-white border-white"}`}
             >
               {f.badge && (
                 <span

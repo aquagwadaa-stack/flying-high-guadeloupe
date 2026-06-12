@@ -44,7 +44,7 @@ function Page() {
 
         {/* Coordonnées + carte */}
         <div className="grid lg:grid-cols-2 gap-6 mb-20">
-          <div className="bg-white rounded-3xl border border-border p-8 lg:p-10 space-y-6">
+          <div className="bg-sky rounded-[2rem] border border-white p-8 lg:p-10 space-y-6 shadow-xl shadow-midnight/5">
             <h2 className="font-display text-2xl font-bold">Nous trouver</h2>
             <div className="flex gap-4">
               <span className="size-11 rounded-2xl bg-lagoon/10 text-lagoon flex items-center justify-center shrink-0">
@@ -98,7 +98,7 @@ function Page() {
               </div>
             </div>
           </div>
-          <div className="rounded-3xl overflow-hidden border border-border min-h-[360px] bg-secondary">
+           <div className="rounded-[2rem] overflow-hidden border-8 border-solar/40 min-h-[360px] bg-secondary shadow-xl shadow-midnight/5">
             <iframe
               title="Plan d’accès à Trapez’cool, Le Helleux, Sainte-Anne"
               src="https://maps.google.com/maps?q=Le%20Helleux%2C%2097180%20Sainte-Anne%2C%20Guadeloupe&t=&z=14&ie=UTF8&iwloc=&output=embed"
@@ -110,7 +110,7 @@ function Page() {
 
         {/* Accès & horaires */}
         <div className="grid lg:grid-cols-2 gap-5 mb-20">
-          <div className="bg-secondary/50 rounded-3xl p-8">
+          <div className="bg-lagoon/10 rounded-3xl p-8 border border-lagoon/15">
             <Clock className="size-6 text-lagoon mb-4" />
             <h3 className="font-display text-xl font-bold mb-4">Horaires</h3>
             <ul className="space-y-2 text-sm">
@@ -125,7 +125,7 @@ function Page() {
               Séances supplémentaires pendant les vacances scolaires.
             </p>
           </div>
-          <div className="bg-secondary/50 rounded-3xl p-8">
+          <div className="bg-coral/10 rounded-3xl p-8 border border-coral/15">
             <Car className="size-6 text-lagoon mb-4" />
             <h3 className="font-display text-xl font-bold mb-4">Stationnement</h3>
             <p className="text-sm text-muted-foreground leading-relaxed">

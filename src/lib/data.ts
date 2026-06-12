@@ -67,7 +67,7 @@ export const FORMULES: Formule[] = [
   {
     id: "groupe",
     name: "Groupes & événements",
-    tagline: "Anniversaire, association ou groupe d’amis : parlons-en ensemble.",
+    tagline: "Privatisez un créneau et imaginons une expérience sur mesure pour votre événement.",
     price: null,
     priceLabel: "Sur demande",
     duration: "Selon le groupe",

@@ -24,7 +24,7 @@ export const Route = createFileRoute("/decouvrir")({
 
 function Page() {
   return (
-    <div className="pt-32 lg:pt-40 pb-24 px-5 lg:px-8">
+    <div className="pt-32 lg:pt-40 pb-24 px-5 lg:px-8 overflow-hidden">
       <div className="max-w-5xl mx-auto">
         <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-lagoon mb-6">
           <span className="h-px w-6 bg-lagoon" /> L’activité
@@ -38,12 +38,15 @@ function Page() {
           l’accompagnement à votre rythme et à vos envies.
         </p>
 
-        <img
-          src={gallery5}
-          alt="Élèves à l'école Trapez'cool"
-          loading="lazy"
-          className="w-full aspect-[16/9] object-cover rounded-3xl my-16"
-        />
+        <div className="relative my-16">
+          <div className="absolute -inset-5 rounded-[3rem] bg-solar/25 rotate-2" aria-hidden />
+          <img
+            src={gallery5}
+            alt="Élève accompagnée à l'école Trapez'cool"
+            loading="lazy"
+            className="relative w-full max-h-[680px] object-contain bg-sky rounded-3xl shadow-2xl"
+          />
+        </div>
 
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
           {[
@@ -75,7 +78,7 @@ function Page() {
           ))}
         </div>
 
-        <div className="mt-20 bg-secondary/50 rounded-3xl p-8 lg:p-12">
+        <div className="mt-20 bg-coral/10 border border-coral/15 rounded-[2rem] p-8 lg:p-12">
           <h3 className="font-display text-2xl font-bold mb-6">Conseils pratiques</h3>
           <ul className="grid sm:grid-cols-2 gap-3">
             {[
