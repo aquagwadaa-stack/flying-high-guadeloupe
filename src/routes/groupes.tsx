@@ -1,12 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
-  ArrowRight,
   Cake,
   Building2,
   Users,
   Sparkles,
   Check,
-  Calendar,
   MessageCircle,
   Mail,
 } from "lucide-react";
@@ -20,12 +18,12 @@ export const Route = createFileRoute("/groupes")({
       {
         name: "description",
         content:
-          "Anniversaires, familles, amis et associations : organisez une séance de trapèze volant en groupe au Helleux, Sainte-Anne.",
+          "Privatisez un créneau de trapèze volant au Helleux pour un anniversaire, une fête ou un événement sur mesure en Guadeloupe.",
       },
       { property: "og:title", content: "Groupes & événements — Trapez’cool" },
       {
         property: "og:description",
-        content: "Une activité originale et fédératrice pour vos groupes en Guadeloupe.",
+        content: "Un créneau privatisé et une expérience de trapèze volant imaginée autour de votre événement.",
       },
     ],
   }),
@@ -35,68 +33,78 @@ export const Route = createFileRoute("/groupes")({
 const FORMATS = [
   {
     icon: Cake,
-    title: "Anniversaire",
-    desc: "Une séance à partager pour les enfants dès 7 ans ou pour les adultes.",
-    details: "Organisation avec l’équipe",
+    title: "Célébration privée",
+    desc: "Anniversaire, fête de famille ou moment important : un créneau rien que pour vous.",
+    details: "Enfants dès 7 ans & adultes",
   },
   {
     icon: Users,
-    title: "Famille & amis",
-    desc: "Venir voler ensemble, que tout le monde découvre ou que certains pratiquent déjà.",
-    details: "Format selon le groupe",
+    title: "Expérience entre proches",
+    desc: "Une activité forte à vivre ensemble, avec un déroulé adapté aux envies du groupe.",
+    details: "Créneau privatisé",
   },
   {
     icon: Building2,
-    title: "Associations & structures",
-    desc: "Une séance adaptée à l’âge, au niveau et à la taille de votre groupe.",
-    details: "Sur demande",
+    title: "Équipe & structure",
+    desc: "Association, entreprise ou collectif : créez un rendez-vous fédérateur hors du quotidien.",
+    details: "Format sur mesure",
   },
   {
     icon: Sparkles,
-    title: "Groupe constitué",
-    desc: "Pour une sortie ponctuelle ou un rendez-vous régulier autour du trapèze.",
-    details: "À organiser ensemble",
+    title: "Votre idée",
+    desc: "Vous avez un projet particulier ? Nous construisons ensemble une expérience qui lui ressemble.",
+    details: "Parlons-en ensemble",
   },
 ];
 
 const INCLUS = [
-  "Accueil du groupe et présentation de l’activité",
+  "Un créneau réservé exclusivement à votre groupe",
+  "Un déroulé défini avec vous avant l’événement",
   "Matériel nécessaire à la pratique",
   "Échauffement et consignes avant de monter",
   "Passages adaptés au niveau de chacun",
-  "Organisation du créneau avec un membre de l’équipe",
+  "Accompagnement dédié par l’équipe Trapez’cool",
 ];
 
 function Page() {
   return (
-    <div className="pt-32 lg:pt-40 pb-24 px-5 lg:px-8">
+    <div className="pt-32 lg:pt-40 pb-24 px-5 lg:px-8 overflow-hidden">
       <div className="max-w-7xl mx-auto">
-        <div className="grid lg:grid-cols-[1.2fr_1fr] gap-12 lg:gap-16 items-end mb-20">
+        <div className="relative grid lg:grid-cols-[1.1fr_1fr] gap-12 lg:gap-16 items-center mb-20 rounded-[2.5rem] bg-sky p-7 lg:p-14">
+          <div className="absolute -top-16 -left-16 size-44 rounded-full bg-solar/35" aria-hidden />
+          <div className="absolute -bottom-20 right-1/3 size-52 rounded-full bg-coral/15" aria-hidden />
           <div>
             <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-lagoon mb-6">
               <span className="h-px w-6 bg-lagoon" /> Groupes & événements
             </span>
             <h1 className="font-display text-5xl lg:text-7xl font-bold tracking-tight text-balance leading-[1.05] mb-6">
-              Venir voler en groupe.
+              Votre événement prend de la hauteur.
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl leading-relaxed">
-              Anniversaire, sortie d’association, famille ou groupe d’amis : dites-nous combien vous
-              êtes et ce que vous imaginez. L’équipe vous proposera un format adapté.
+              Ici, il ne s’agit pas simplement de réserver plusieurs places. Vous pouvez privatiser
+              un créneau et imaginer avec l’équipe une expérience unique, pensée pour votre groupe,
+              votre occasion et votre rythme.
             </p>
           </div>
-          <img
-            src={groupSchool}
-            alt="Groupe à l’école Trapez’cool"
-            loading="lazy"
-            className="w-full aspect-[4/3] object-cover rounded-3xl"
-          />
+          <div className="relative rotate-2">
+            <div className="absolute -inset-4 rounded-[2rem] bg-coral/25 -rotate-3" aria-hidden />
+            <img
+              src={groupSchool}
+              alt="Groupe accueilli pour une expérience privée à l’école Trapez’cool"
+              loading="lazy"
+              className="relative w-full aspect-[4/3] object-cover rounded-3xl shadow-2xl"
+            />
+            <span className="absolute -bottom-5 left-6 rounded-full bg-solar px-5 py-3 font-display font-bold shadow-lg -rotate-2">
+              Privatisation sur demande
+            </span>
+          </div>
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-24">
           {FORMATS.map((f) => (
             <div
               key={f.title}
-              className="bg-white rounded-3xl p-7 border border-border flex flex-col"
+              className="bg-white/90 rounded-3xl p-7 border border-white flex flex-col shadow-lg shadow-midnight/5 hover:-translate-y-1 transition-transform"
             >
               <div className="size-12 rounded-2xl bg-lagoon/10 text-lagoon flex items-center justify-center mb-5">
                 <f.icon className="size-6" />
@@ -113,7 +121,7 @@ function Page() {
         <div className="grid lg:grid-cols-2 gap-12 mb-24">
           <div>
             <h2 className="font-display text-3xl lg:text-4xl font-bold mb-6 tracking-tight">
-              Ce qui est inclus
+              Plus qu’une réservation de groupe
             </h2>
             <ul className="space-y-4">
               {INCLUS.map((i) => (
@@ -126,7 +134,7 @@ function Page() {
               ))}
             </ul>
           </div>
-          <div className="bg-midnight text-paper rounded-3xl p-8 lg:p-10">
+          <div className="bg-midnight text-paper rounded-[2rem] p-8 lg:p-10 rotate-1 shadow-2xl shadow-midnight/20">
             <h2 className="font-display text-3xl font-bold mb-6 tracking-tight">
               Comment ça marche
             </h2>
@@ -134,23 +142,23 @@ function Page() {
               {[
                 {
                   n: "01",
-                  t: "Vous nous décrivez le groupe",
-                  d: "Date envisagée, nombre et âge des participants, niveau et besoins particuliers.",
+                  t: "Vous nous racontez votre idée",
+                  d: "Occasion, date envisagée, nombre et âge des participants, ambiance souhaitée.",
                 },
                 {
                   n: "02",
-                  t: "On vérifie ce qui est possible",
-                  d: "L’équipe vous répond avec un format et un créneau adaptés.",
+                  t: "On imagine le bon format",
+                  d: "L’équipe construit une proposition adaptée à votre événement et à votre groupe.",
                 },
                 {
                   n: "03",
-                  t: "On convient de la date",
-                  d: "Les détails pratiques sont confirmés directement avec vous.",
+                  t: "On privatise votre créneau",
+                  d: "La date, le déroulé et les détails pratiques sont confirmés avec vous.",
                 },
                 {
                   n: "04",
-                  t: "Vous venez voler",
-                  d: "L’équipe accueille le groupe et accompagne chaque participant.",
+                  t: "Vous vivez l’expérience",
+                  d: "Le jour venu, le site et l’équipe sont prêts à faire décoller votre événement.",
                 },
               ].map((s) => (
                 <li key={s.n} className="flex gap-4">
@@ -167,13 +175,13 @@ function Page() {
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-lagoon to-turquoise rounded-[2.5rem] p-10 lg:p-16 text-white text-center">
+        <div className="bg-gradient-to-br from-coral to-lagoon rounded-[2.5rem] p-10 lg:p-16 text-white text-center relative overflow-hidden">
           <h2 className="font-display text-3xl lg:text-5xl font-bold tracking-tight mb-4 text-balance">
-            Organiser une séance de groupe.
+            Imaginons votre événement en l’air.
           </h2>
           <p className="text-white/85 max-w-xl mx-auto mb-8">
-            Écrivez-nous avec quelques informations sur le groupe. L’équipe reviendra vers vous pour
-            choisir un créneau.
+            Écrivez-nous avec votre occasion, le nombre de participants et la date souhaitée.
+            L’équipe vous proposera une privatisation adaptée.
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
             <a
