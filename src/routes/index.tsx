@@ -67,7 +67,7 @@ function Hero() {
             </span>
             Le Helleux · Sainte-Anne · Guadeloupe
           </span>
-          <h1 className="font-display text-[clamp(3.25rem,6vw,6.5rem)] font-extrabold leading-[0.92] tracking-tighter mb-8">
+          <h1 className="font-display text-[2.65rem] sm:text-[clamp(3.5rem,6vw,6.5rem)] font-extrabold leading-[0.94] tracking-tighter mb-8">
             Prenez votre <span className="italic text-solar drop-shadow-sm">envol</span>
             <br />
             avec Trapez'cool
