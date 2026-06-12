@@ -57,20 +57,20 @@ function Hero() {
         height={1080}
         className="absolute inset-0 w-full h-full object-cover"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-midnight via-midnight/40 to-midnight/20" />
+      <div className="absolute inset-0 bg-gradient-to-t from-midnight via-midnight/35 to-midnight/20" />
       <div className="absolute inset-0 bg-gradient-to-r from-midnight/60 via-transparent to-transparent" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-5 lg:px-8 w-full pt-24">
         <div className="max-w-3xl text-white animate-rise">
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold tracking-wide mb-6">
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-xs font-semibold tracking-wide mb-6">
             <span className="relative flex size-2">
               <span className="absolute inset-0 rounded-full bg-solar animate-ping opacity-75" />
               <span className="relative inline-flex rounded-full size-2 bg-solar" />
             </span>
             Le Helleux · Sainte-Anne · Guadeloupe
           </span>
-          <h1 className="font-display text-5xl sm:text-6xl lg:text-8xl font-bold leading-[0.95] tracking-tighter text-balance mb-8">
-            Prenez votre <span className="italic text-solar">envol</span>
+          <h1 className="font-display text-5xl sm:text-6xl lg:text-8xl font-extrabold leading-[0.95] tracking-tighter text-balance mb-8">
+            Prenez votre <span className="italic text-solar drop-shadow-sm">envol</span>
             <br />
             avec Trapez'cool
           </h1>
@@ -82,7 +82,7 @@ function Hero() {
             <Link
               to="/reserver"
               search={{ formule: "envolee" }}
-              className="inline-flex items-center gap-2 h-13 px-7 py-4 rounded-full bg-lagoon text-white font-semibold text-base hover:brightness-110 active:scale-95 transition-all shadow-2xl shadow-lagoon/30"
+              className="inline-flex items-center gap-2 h-13 px-7 py-4 rounded-full bg-coral text-white font-bold text-base hover:brightness-110 active:scale-95 transition-all shadow-2xl shadow-coral/30"
             >
               Réserver une séance <ArrowRight className="size-4" />
             </Link>
@@ -240,8 +240,8 @@ function Experiences() {
     },
     {
       id: "groupe",
-      title: "Groupes & événements",
-      desc: "Anniversaire, association ou groupe d’amis.",
+       title: "Groupes & événements",
+       desc: "Privatisez un créneau pour une expérience pensée autour de votre événement.",
       price: "Sur demande",
       duration: "Selon le groupe",
       color: "coral",
@@ -353,12 +353,12 @@ function Steps() {
 
 function Photos() {
   const pics = [
-    { src: gallery3, alt: "Catch en plein vol", h: "row-span-2" },
-    { src: gallery1, alt: "Enfant souriant sur le trapèze", h: "" },
-    { src: gallery6, alt: "Pratiquante sur la barre", h: "" },
+    { src: gallery3, alt: "Catch en plein vol", h: "row-span-2", fit: "object-contain bg-midnight" },
+    { src: groupSchool, alt: "Groupe réuni à l’école Trapez’cool", h: "", fit: "object-cover" },
+    { src: gallery6, alt: "Pratiquante accompagnée sur la barre", h: "", fit: "object-contain bg-sky" },
   ];
   return (
-    <section className="py-24 lg:py-32 px-5 lg:px-8">
+    <section className="py-24 lg:py-32 px-5 lg:px-8 bg-coral/10 overflow-hidden">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
@@ -386,7 +386,7 @@ function Photos() {
                 src={p.src}
                 alt={p.alt}
                 loading="lazy"
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                className={`w-full h-full ${p.fit} hover:scale-[1.02] transition-transform duration-700`}
               />
             </div>
           ))}
