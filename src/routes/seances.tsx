@@ -9,7 +9,7 @@ export const Route = createFileRoute("/seances")({
       {
         name: "description",
         content:
-          "Formules de trapèze volant à Sainte-Anne : première envolée, séance progression, carte 5 séances, séance privée, groupes.",
+          "Formules de trapèze volant à Sainte-Anne : première envolée, séance progression, cartes 5 et 10 séances, groupes.",
       },
       { property: "og:title", content: "Séances & tarifs — Trapez’cool" },
       {
@@ -40,33 +40,28 @@ function Page() {
         </p>
 
         <div className="grid lg:grid-cols-3 gap-5 mb-20">
-          {FORMULES.map((f, index) => (
+          {FORMULES.map((f) => (
             <div
               key={f.id}
-              className={`rounded-3xl p-8 border flex flex-col shadow-lg shadow-midnight/5 hover:-translate-y-1 transition-transform ${f.highlight ? "bg-midnight text-paper border-midnight" : index % 3 === 1 ? "bg-solar/70 border-white" : index % 3 === 2 ? "bg-coral/15 border-white" : "bg-white border-white"}`}
+              className="rounded-3xl p-8 border border-border bg-white flex flex-col shadow-sm shadow-midnight/5 hover:border-lagoon/30 hover:-translate-y-1 transition-all"
             >
               {f.badge && (
-                <span
-                  className={`inline-flex w-fit items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-5 ${f.highlight ? "bg-solar text-midnight" : "bg-lagoon/10 text-lagoon"}`}
-                >
+                <span className="inline-flex w-fit items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-5 bg-lagoon/10 text-lagoon">
                   {f.badge}
                 </span>
               )}
               <h3 className="font-display text-2xl font-bold mb-3">{f.name}</h3>
-              <p
-                className={`text-sm mb-6 flex-1 ${f.highlight ? "text-paper/70" : "text-muted-foreground"}`}
-              >
-                {f.tagline}
-              </p>
+              <p className="text-sm mb-6 flex-1 text-muted-foreground">{f.tagline}</p>
               <div className="font-display text-4xl font-bold mb-1">{f.priceLabel}</div>
-              <div
-                className={`text-sm mb-6 ${f.highlight ? "text-paper/60" : "text-muted-foreground"}`}
-              >
+              <div className="text-sm mb-6 text-muted-foreground">
                 {f.duration}
                 {f.age ? ` · ${f.age}` : ""}
                 {f.validity ? ` · ${f.validity}` : ""}
               </div>
-              {f.id === "envolee" || f.id === "progression" ? (
+              {f.id === "envolee" ||
+              f.id === "progression" ||
+              f.id === "carte5" ||
+              f.id === "carte10" ? (
                 <Link
                   to="/reserver"
                   search={{ formule: f.id }}
@@ -81,14 +76,7 @@ function Page() {
                 >
                   {f.cta}
                 </Link>
-              ) : (
-                <a
-                  href={`https://wa.me/590690193428?text=${encodeURIComponent(`Bonjour, je voudrais en savoir plus sur la formule « ${f.name} ».`)}`}
-                  className="h-12 inline-flex items-center justify-center rounded-full font-semibold transition-all bg-midnight text-paper hover:bg-lagoon"
-                >
-                  {f.cta}
-                </a>
-              )}
+              ) : null}
             </div>
           ))}
         </div>

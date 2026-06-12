@@ -38,13 +38,12 @@ function Page() {
           l’accompagnement à votre rythme et à vos envies.
         </p>
 
-        <div className="relative my-16">
-          <div className="absolute -inset-5 rounded-[3rem] bg-solar/25 rotate-2" aria-hidden />
+        <div className="my-14 max-w-4xl mx-auto">
           <img
             src={gallery5}
             alt="Élève accompagnée à l'école Trapez'cool"
             loading="lazy"
-            className="relative w-full max-h-[680px] object-contain bg-sky rounded-3xl shadow-2xl"
+            className="w-full max-h-[480px] object-contain bg-sky rounded-3xl shadow-xl shadow-midnight/10"
           />
         </div>
 

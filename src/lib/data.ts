@@ -43,7 +43,7 @@ export const FORMULES: Formule[] = [
     priceLabel: "135 €",
     duration: "5 × 1 h 30",
     validity: "Valable 3 mois",
-    cta: "Nous écrire",
+    cta: "Acheter la carte",
   },
   {
     id: "carte10",
@@ -53,16 +53,7 @@ export const FORMULES: Formule[] = [
     priceLabel: "250 €",
     duration: "10 × 1 h 30",
     validity: "Valable 6 mois",
-    cta: "Nous écrire",
-  },
-  {
-    id: "privee",
-    name: "Séance privée",
-    tagline: "Un créneau à organiser directement avec l’équipe.",
-    price: 80,
-    priceLabel: "80 €",
-    duration: "1 h",
-    cta: "Demander un créneau",
+    cta: "Acheter la carte",
   },
   {
     id: "groupe",

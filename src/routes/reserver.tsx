@@ -17,6 +17,7 @@ import {
   formatDateLong,
   useStore,
   getAccountByEmail,
+  addCreditsForAccount,
   consumeCredit,
   type Participant,
 } from "@/lib/data";
@@ -39,7 +40,9 @@ export const Route = createFileRoute("/reserver")({
 });
 
 type Step = 0 | 1 | 2 | 3 | 4 | 5 | 6;
-const BOOKABLE_FORMULES = FORMULES.filter((f) => f.id === "envolee" || f.id === "progression");
+const BOOKABLE_FORMULES = FORMULES.filter((f) =>
+  ["envolee", "progression", "carte5", "carte10"].includes(f.id),
+);
 
 function Page() {
   const slots = useStore((s) => s.slots);
@@ -69,14 +72,20 @@ function Page() {
   } | null>(null);
   const [creditMode, setCreditMode] = useState(false);
   const [creditEmail, setCreditEmail] = useState("");
+  const [creditPhone, setCreditPhone] = useState("");
   const [creditLookup, setCreditLookup] = useState<{
     status: "idle" | "notfound" | "found";
     credits: number;
   }>({ status: "idle", credits: 0 });
 
   const formule = FORMULES.find((f) => f.id === formuleId)!;
+  const isCardPurchase = formuleId === "carte5" || formuleId === "carte10";
+  const cardCredits = formuleId === "carte10" ? 10 : 5;
+  const displayedFormules = creditMode
+    ? BOOKABLE_FORMULES.filter((f) => f.id === "envolee" || f.id === "progression")
+    : BOOKABLE_FORMULES;
   const slot = slots.find((s) => s.id === slotId);
-  const total = creditMode ? 0 : (formule.price ?? 0) * count;
+  const total = creditMode ? 0 : (formule.price ?? 0) * (isCardPurchase ? 1 : count);
 
   const upcomingByDate = useMemo(() => {
     const map = new Map<string, typeof slots>();
@@ -89,13 +98,21 @@ function Page() {
     return Array.from(map.entries()).slice(0, 14);
   }, [slots, count]);
 
-  const goNext = () => setStep((s) => Math.min(6, s + 1) as Step);
-  const goPrev = () => setStep((s) => Math.max(0, s - 1) as Step);
+  const goNext = () => {
+    if (isCardPurchase && step === 0) return setStep(3);
+    if (isCardPurchase && step === 3) return setStep(5);
+    setStep((s) => Math.min(6, s + 1) as Step);
+  };
+  const goPrev = () => {
+    if (isCardPurchase && step === 5) return setStep(3);
+    if (isCardPurchase && step === 3) return setStep(0);
+    setStep((s) => Math.max(0, s - 1) as Step);
+  };
 
   const canNext = (() => {
     if (step === 0) return !!formuleId;
-    if (step === 1) return count >= 1 && count <= 10;
-    if (step === 2) return !!slotId;
+    if (step === 1) return !isCardPurchase && count >= 1 && count <= 10;
+    if (step === 2) return !isCardPurchase && !!slotId;
     if (step === 3)
       return (
         contact.firstName &&
@@ -104,12 +121,30 @@ function Page() {
         contact.phone.length >= 8
       );
     if (step === 4)
-      return participants.length === count && participants.every((p) => p.firstName && p.age >= 7);
+      return (
+        !isCardPurchase &&
+        participants.length === count &&
+        participants.every((p) => p.firstName && p.age >= 7)
+      );
     if (step === 5) return contact.accept;
     return true;
   })();
 
   const submit = () => {
+    if (isCardPurchase) {
+      const account = addCreditsForAccount(contact.email, cardCredits, {
+        firstName: contact.firstName,
+        lastName: contact.lastName,
+        phone: contact.phone,
+      });
+      setConfirmation({
+        id: `C-${Date.now().toString(36).toUpperCase()}`,
+        accountCredits: account.credits,
+        usedCredit: false,
+      });
+      setStep(6);
+      return;
+    }
     if (!slot) return;
     let usedCredit = false;
     let accountCredits: number | undefined;
@@ -144,15 +179,23 @@ function Page() {
     setParticipants(next);
   }
 
-  const steps = [
-    "Formule",
-    "Participants",
-    "Créneau",
-    "Contact",
-    "Détails",
-    "Récapitulatif",
-    "Paiement",
-  ];
+  const steps = isCardPurchase
+    ? [
+        { step: 0, label: "Carte" },
+        { step: 3, label: "Coordonnées" },
+        { step: 5, label: "Récapitulatif" },
+        { step: 6, label: "Paiement" },
+      ]
+    : [
+        { step: 0, label: "Formule" },
+        { step: 1, label: "Participants" },
+        { step: 2, label: "Créneau" },
+        { step: 3, label: "Contact" },
+        { step: 4, label: "Détails" },
+        { step: 5, label: "Récapitulatif" },
+        { step: 6, label: "Paiement" },
+      ];
+  const currentStepIndex = steps.findIndex((item) => item.step === step);
 
   return (
     <div className="pt-28 lg:pt-36 pb-24 px-5 lg:px-8 min-h-screen bg-secondary/30">
@@ -164,13 +207,15 @@ function Page() {
           <ArrowLeft className="size-4" /> Retour
         </Link>
         <h1 className="font-display text-4xl lg:text-5xl font-bold tracking-tight mb-3">
-          Réserver une séance
+          {isCardPurchase ? "Acheter une carte" : "Réserver une séance"}
         </h1>
         <p className="text-muted-foreground mb-10">
-          Choisissez la séance, le nombre de participants et le créneau qui vous convient.
+          {isCardPurchase
+            ? "La carte sera liée à vos coordonnées, sans mot de passe ni espace personnel à gérer."
+            : "Choisissez la séance, le nombre de participants et le créneau qui vous convient."}
         </p>
 
-        {step < 6 && (
+        {step < 6 && !isCardPurchase && (
           <div className="mb-8 rounded-3xl border border-lagoon/20 bg-lagoon/5 p-5 lg:p-6">
             {!creditMode ? (
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -187,7 +232,7 @@ function Page() {
                     </p>
                   </div>
                 </div>
-                <div className="flex gap-2 w-full sm:w-auto">
+                <div className="grid sm:grid-cols-[1fr_150px_auto] gap-2 w-full sm:w-auto">
                   <input
                     type="email"
                     placeholder="Votre e-mail"
@@ -196,13 +241,28 @@ function Page() {
                       setCreditEmail(e.target.value);
                       setCreditLookup({ status: "idle", credits: 0 });
                     }}
-                    className="flex-1 sm:w-64 px-4 h-11 rounded-full border border-border bg-white text-sm focus:border-lagoon outline-none"
+                    className="min-w-0 sm:w-56 px-4 h-11 rounded-full border border-border bg-white text-sm focus:border-lagoon outline-none"
+                  />
+                  <input
+                    type="tel"
+                    inputMode="numeric"
+                    placeholder="4 derniers chiffres"
+                    value={creditPhone}
+                    onChange={(e) => {
+                      setCreditPhone(e.target.value);
+                      setCreditLookup({ status: "idle", credits: 0 });
+                    }}
+                    className="min-w-0 px-4 h-11 rounded-full border border-border bg-white text-sm focus:border-lagoon outline-none"
                   />
                   <button
                     type="button"
                     onClick={() => {
                       const acc = getAccountByEmail(creditEmail);
-                      if (acc && acc.credits > 0) {
+                      const enteredPhone = creditPhone.replace(/\D/g, "");
+                      const accountPhone = acc?.phone?.replace(/\D/g, "") ?? "";
+                      const phoneMatches =
+                        enteredPhone.length >= 4 && accountPhone.endsWith(enteredPhone.slice(-4));
+                      if (acc && acc.credits > 0 && phoneMatches) {
                         setCreditLookup({ status: "found", credits: acc.credits });
                         setCreditMode(true);
                         setFormuleId("envolee");
@@ -232,7 +292,7 @@ function Page() {
                   </span>
                   <div>
                     <div className="font-display font-bold">
-                      Compte trouvé · {creditLookup.credits} crédit
+                      Carte trouvée · {creditLookup.credits} crédit
                       {creditLookup.credits > 1 ? "s" : ""} disponible
                       {creditLookup.credits > 1 ? "s" : ""}
                     </div>
@@ -255,7 +315,7 @@ function Page() {
             )}
             {creditLookup.status === "notfound" && !creditMode && (
               <p className="text-sm text-coral mt-3">
-                Aucun compte ne correspond à cet e-mail, ou aucun crédit disponible.
+                Carte introuvable avec ces informations, ou aucun crédit disponible.
               </p>
             )}
           </div>
@@ -263,15 +323,17 @@ function Page() {
 
         {/* Stepper */}
         <div className="hidden md:flex items-center gap-2 mb-10 text-xs font-medium">
-          {steps.map((label, i) => (
-            <div key={label} className="flex items-center gap-2">
+          {steps.map((item, i) => (
+            <div key={item.step} className="flex items-center gap-2">
               <div
-                className={`size-7 rounded-full inline-flex items-center justify-center font-bold ${i < step ? "bg-lagoon text-white" : i === step ? "bg-midnight text-white" : "bg-white border border-border text-muted-foreground"}`}
+                className={`size-7 rounded-full inline-flex items-center justify-center font-bold ${i < currentStepIndex ? "bg-lagoon text-white" : i === currentStepIndex ? "bg-midnight text-white" : "bg-white border border-border text-muted-foreground"}`}
               >
-                {i < step ? <Check className="size-3.5" /> : i + 1}
+                {i < currentStepIndex ? <Check className="size-3.5" /> : i + 1}
               </div>
-              <span className={i === step ? "text-foreground" : "text-muted-foreground"}>
-                {label}
+              <span
+                className={i === currentStepIndex ? "text-foreground" : "text-muted-foreground"}
+              >
+                {item.label}
               </span>
               {i < steps.length - 1 && <span className="w-6 h-px bg-border" />}
             </div>
@@ -289,11 +351,18 @@ function Page() {
                   </p>
                 )}
                 <div className="grid sm:grid-cols-2 gap-3">
-                  {BOOKABLE_FORMULES.map((f) => (
+                  {displayedFormules.map((f) => (
                     <button
                       key={f.id}
                       type="button"
-                      onClick={() => setFormuleId(f.id)}
+                      onClick={() => {
+                        setFormuleId(f.id);
+                        if (f.id === "carte5" || f.id === "carte10") {
+                          setCreditMode(false);
+                          setCount(1);
+                          setSlotId("");
+                        }
+                      }}
                       className={`text-left p-5 rounded-2xl border-2 transition-all ${formuleId === f.id ? "border-lagoon bg-lagoon/5" : "border-border hover:border-lagoon/30"}`}
                     >
                       <div className="flex justify-between items-baseline mb-2">
@@ -303,13 +372,18 @@ function Page() {
                         </div>
                       </div>
                       <div className="text-sm text-muted-foreground">{f.tagline}</div>
+                      {(f.id === "carte5" || f.id === "carte10") && (
+                        <div className="text-xs font-semibold text-lagoon mt-3">
+                          Achat immédiat · aucun compte à créer
+                        </div>
+                      )}
                     </button>
                   ))}
                 </div>
               </div>
             )}
 
-            {step === 1 && (
+            {step === 1 && !isCardPurchase && (
               <div>
                 <h2 className="font-display text-2xl font-bold mb-6">Nombre de participants</h2>
                 <div className="flex items-center gap-6">
@@ -336,7 +410,7 @@ function Page() {
               </div>
             )}
 
-            {step === 2 && (
+            {step === 2 && !isCardPurchase && (
               <div>
                 <h2 className="font-display text-2xl font-bold mb-6">Sélectionnez un créneau</h2>
                 <div className="space-y-3 max-h-[440px] overflow-y-auto pr-1">
@@ -424,7 +498,7 @@ function Page() {
               </div>
             )}
 
-            {step === 4 && (
+            {step === 4 && !isCardPurchase && (
               <div>
                 <h2 className="font-display text-2xl font-bold mb-6">Participants</h2>
                 <div className="space-y-4">
@@ -493,20 +567,31 @@ function Page() {
               </div>
             )}
 
-            {step === 5 && slot && (
+            {step === 5 && (slot || isCardPurchase) && (
               <div>
                 <h2 className="font-display text-2xl font-bold mb-6">Récapitulatif</h2>
                 <dl className="divide-y divide-border">
                   <Row k="Formule" v={formule.name} />
-                  <Row
-                    k="Date"
-                    v={<span className="capitalize">{formatDateLong(slot.date)}</span>}
-                  />
-                  <Row
-                    k="Horaire"
-                    v={`${slot.time.replace(":", " h ")} – ${slot.endTime.replace(":", " h ")}`}
-                  />
-                  <Row k="Participants" v={`${count} personne${count > 1 ? "s" : ""}`} />
+                  {isCardPurchase ? (
+                    <>
+                      <Row k="Crédits" v={`${cardCredits} séances`} />
+                      <Row k="Validité" v={formule.validity ?? ""} />
+                    </>
+                  ) : (
+                    slot && (
+                      <>
+                        <Row
+                          k="Date"
+                          v={<span className="capitalize">{formatDateLong(slot.date)}</span>}
+                        />
+                        <Row
+                          k="Horaire"
+                          v={`${slot.time.replace(":", " h ")} – ${slot.endTime.replace(":", " h ")}`}
+                        />
+                        <Row k="Participants" v={`${count} personne${count > 1 ? "s" : ""}`} />
+                      </>
+                    )
+                  )}
                   <Row
                     k="Contact"
                     v={`${contact.firstName} ${contact.lastName} · ${contact.email}`}
@@ -524,24 +609,26 @@ function Page() {
                     className="mt-1 size-5 rounded border-border accent-lagoon"
                   />
                   <span className="text-sm text-muted-foreground">
-                    J’accepte les conditions générales et la politique de confidentialité. Je
-                    confirme l’aptitude des participants à pratiquer une activité sportive.
+                    {isCardPurchase
+                      ? "J’accepte les conditions générales et la politique de confidentialité."
+                      : "J’accepte les conditions générales et la politique de confidentialité. Je confirme l’aptitude des participants à pratiquer une activité sportive."}
                   </span>
                 </label>
               </div>
             )}
 
-            {step === 6 && confirmation && slot && (
+            {step === 6 && confirmation && (slot || isCardPurchase) && (
               <div className="text-center py-8">
                 <div className="inline-flex size-20 rounded-full bg-turquoise/10 text-turquoise items-center justify-center mb-6">
                   <Check className="size-10" />
                 </div>
                 <h2 className="font-display text-3xl lg:text-4xl font-bold mb-3">
-                  C’est réservé !
+                  {isCardPurchase ? "Votre carte est prête !" : "C’est réservé !"}
                 </h2>
                 <p className="text-muted-foreground max-w-md mx-auto mb-2">
-                  Vous allez recevoir toutes les informations pratiques par e-mail. Rendez-vous 15
-                  minutes avant le début de votre séance.
+                  {isCardPurchase
+                    ? "Elle est automatiquement liée à votre e-mail et à votre téléphone. Vous pourrez utiliser vos crédits depuis n’importe quel créneau disponible."
+                    : "Vous allez recevoir toutes les informations pratiques par e-mail. Rendez-vous 15 minutes avant le début de votre séance."}
                 </p>
                 <p className="text-xs text-muted-foreground mb-8">
                   Référence:{" "}
@@ -551,19 +638,21 @@ function Page() {
                   <div className="max-w-md mx-auto bg-lagoon/5 border border-lagoon/20 rounded-2xl p-5 mb-8 text-left">
                     <div className="flex items-center gap-2 font-display font-bold mb-1">
                       <Ticket className="size-4 text-lagoon" />{" "}
-                      {confirmation.usedCredit ? "Crédit utilisé" : "Votre compte est créé"}
+                      {confirmation.usedCredit ? "Crédit utilisé" : "Aucun mot de passe nécessaire"}
                     </div>
                     <p className="text-sm text-muted-foreground">
                       {confirmation.usedCredit
                         ? `Il vous reste ${confirmation.accountCredits} crédit${confirmation.accountCredits > 1 ? "s" : ""} sur votre carte.`
-                        : `${confirmation.accountCredits} crédits ont été ajoutés à votre carte. Pour vos prochaines réservations, saisissez simplement votre e-mail dans le bandeau « J’ai déjà une carte ».`}
+                        : `${confirmation.accountCredits} crédits sont disponibles. Pour réserver, saisissez votre e-mail et les 4 derniers chiffres de votre téléphone dans le bandeau « J’ai déjà une carte ».`}
                     </p>
                   </div>
                 )}
                 <div className="flex flex-wrap gap-3 justify-center">
-                  <button className="inline-flex items-center gap-2 h-12 px-6 rounded-full bg-midnight text-paper font-semibold">
-                    <CalendarIcon className="size-4" /> Ajouter au calendrier
-                  </button>
+                  {!isCardPurchase && (
+                    <button className="inline-flex items-center gap-2 h-12 px-6 rounded-full bg-midnight text-paper font-semibold">
+                      <CalendarIcon className="size-4" /> Ajouter au calendrier
+                    </button>
+                  )}
                   <a
                     href="https://wa.me/590690193428"
                     className="inline-flex items-center h-12 px-6 rounded-full bg-secondary font-semibold"
@@ -633,10 +722,12 @@ function Page() {
                   <span className="font-semibold">{formule.name}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-paper/70">Participants</span>
-                  <span className="font-semibold">{count}</span>
+                  <span className="text-paper/70">
+                    {isCardPurchase ? "Crédits" : "Participants"}
+                  </span>
+                  <span className="font-semibold">{isCardPurchase ? cardCredits : count}</span>
                 </div>
-                {slot && (
+                {slot && !isCardPurchase && (
                   <div className="flex justify-between">
                     <span className="text-paper/70">Date</span>
                     <span className="font-semibold capitalize text-right">
@@ -652,7 +743,8 @@ function Page() {
                 <span className="font-display text-3xl font-bold">{total} €</span>
               </div>
               <p className="text-xs text-paper/50 mt-4 flex items-center gap-1.5">
-                <Users className="size-3" /> Récapitulatif avant confirmation et paiement
+                {isCardPurchase ? <Ticket className="size-3" /> : <Users className="size-3" />}
+                Récapitulatif avant confirmation et paiement
               </p>
             </aside>
           )}

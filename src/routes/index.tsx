@@ -59,7 +59,7 @@ function Hero() {
       <div className="absolute inset-0 bg-gradient-to-r from-midnight/60 via-transparent to-transparent" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-5 lg:px-8 w-full pt-24">
-        <div className="max-w-5xl text-white animate-rise">
+        <div className="max-w-4xl text-white animate-rise">
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-xs font-semibold tracking-wide mb-6">
             <span className="relative flex size-2">
               <span className="absolute inset-0 rounded-full bg-solar animate-ping opacity-75" />
@@ -67,7 +67,7 @@ function Hero() {
             </span>
             Le Helleux · Sainte-Anne · Guadeloupe
           </span>
-          <h1 className="font-display text-[2.25rem] sm:text-[clamp(3.5rem,6vw,6.5rem)] font-extrabold leading-[0.96] tracking-tighter mb-8">
+          <h1 className="font-sans text-[2.25rem] sm:text-[clamp(3.5rem,6vw,6.5rem)] font-extrabold leading-[1.02] tracking-[-0.045em] mb-8">
             Prenez votre <span className="italic text-solar drop-shadow-sm">envol</span>
             <br />
             avec Trapez'cool
@@ -113,19 +113,16 @@ function Reassurance() {
     { icon: Sparkles, title: "Débutants bienvenus", desc: "Aucune expérience nécessaire." },
     {
       icon: MapPin,
-      title: "Au Helleux, Sainte-Anne",
+      title: "Au Helleux",
       desc: "Entre Sainte-Anne et Saint-François.",
     },
   ];
   return (
     <section className="relative -mt-12 z-20 px-5 lg:px-8">
-      <div className="max-w-6xl mx-auto bg-background/90 backdrop-blur-xl rounded-[2rem] shadow-2xl shadow-midnight/10 border border-white grid sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-lagoon/15 overflow-hidden">
-        {items.map((it, index) => (
-          <div
-            key={it.title}
-            className={`p-6 lg:p-8 flex items-center gap-4 ${index === 1 ? "bg-solar/20" : index === 2 ? "bg-coral/10" : "bg-lagoon/10"}`}
-          >
-            <div className="size-12 rounded-full bg-white text-lagoon flex items-center justify-center shrink-0 shadow-sm">
+      <div className="max-w-6xl mx-auto bg-background/95 backdrop-blur-xl rounded-[2rem] shadow-2xl shadow-midnight/10 border border-white grid sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-border overflow-hidden">
+        {items.map((it) => (
+          <div key={it.title} className="p-6 lg:p-8 flex items-center gap-4">
+            <div className="size-12 rounded-2xl bg-lagoon/10 text-lagoon flex items-center justify-center shrink-0">
               <it.icon className="size-6" />
             </div>
             <div>
@@ -143,18 +140,16 @@ function ExperienceIntro() {
   return (
     <section className="py-24 lg:py-32 px-5 lg:px-8 overflow-hidden">
       <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-        <div className="relative lg:-rotate-2">
-          <div className="absolute -inset-5 rounded-[3rem] bg-coral/20 rotate-3" aria-hidden />
-          <div className="absolute -top-8 -right-8 size-28 rounded-full bg-solar/80" aria-hidden />
+        <div className="relative w-full max-w-[540px] mx-auto lg:mx-0">
           <img
             src={gallery3}
             alt="Trapéziste en plein envol dans le ciel bleu à Trapez’cool"
             width={1280}
             height={1280}
             loading="lazy"
-            className="relative w-full aspect-[4/3] object-contain bg-midnight rounded-[2rem] shadow-2xl"
+            className="w-full aspect-[4/3] object-contain bg-midnight rounded-[2rem] shadow-xl shadow-midnight/10"
           />
-          <span className="absolute -bottom-5 left-7 rounded-full bg-solar px-5 py-3 font-display font-bold text-midnight shadow-lg rotate-2">
+          <span className="absolute bottom-5 left-5 rounded-xl bg-midnight/85 px-4 py-2.5 text-sm font-semibold text-white backdrop-blur">
             Du premier vol aux figures avancées
           </span>
         </div>
@@ -238,17 +233,15 @@ function Experiences() {
     },
     {
       id: "groupe",
-       title: "Groupes & événements",
-       desc: "Privatisez un créneau pour une expérience pensée autour de votre événement.",
+      title: "Groupes & événements",
+      desc: "Privatisez un créneau pour une expérience pensée autour de votre événement.",
       price: "Sur demande",
       duration: "Selon le groupe",
       color: "coral",
     },
   ];
   return (
-    <section className="py-24 lg:py-32 px-5 lg:px-8 bg-sky relative overflow-hidden">
-      <div className="absolute -top-20 -right-20 size-72 rounded-full bg-coral/15" aria-hidden />
-      <div className="absolute bottom-10 -left-20 size-56 rounded-full bg-solar/25" aria-hidden />
+    <section className="py-24 lg:py-32 px-5 lg:px-8 bg-secondary/45">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
           <div>
@@ -271,23 +264,21 @@ function Experiences() {
             <Link
               key={c.id}
               to="/seances"
-              className={`group relative rounded-3xl p-7 border border-white hover:shadow-2xl hover:shadow-midnight/10 hover:-translate-y-2 transition-all flex flex-col ${i === 0 ? "bg-lagoon text-white rotate-[-1deg]" : i === 1 ? "bg-white" : i === 2 ? "bg-solar/80 rotate-[1deg]" : "bg-coral text-white"}`}
+              className="group relative rounded-3xl p-7 border border-border bg-white hover:border-lagoon/30 hover:shadow-xl hover:shadow-midnight/5 hover:-translate-y-1 transition-all flex flex-col"
             >
-              <div
-                className="size-12 rounded-full flex items-center justify-center mb-6 bg-white/80 text-midnight"
-              >
-                <span className="font-display text-xl font-bold">0{i + 1}</span>
+              <div className="size-11 rounded-2xl flex items-center justify-center mb-6 bg-lagoon/10 text-lagoon">
+                <span className="font-display text-lg font-bold">0{i + 1}</span>
               </div>
               <h3 className="font-display text-xl font-bold mb-2">{c.title}</h3>
-              <p className={`text-sm mb-6 flex-1 ${i === 0 || i === 3 ? "text-white/80" : "text-muted-foreground"}`}>{c.desc}</p>
-              <div className="flex items-end justify-between border-t border-current/15 pt-5">
+              <p className="text-sm mb-6 flex-1 text-muted-foreground">{c.desc}</p>
+              <div className="flex items-end justify-between border-t border-border pt-5">
                 <div>
-                  <div className={`text-xs uppercase tracking-wide font-medium ${i === 0 || i === 3 ? "text-white/70" : "text-muted-foreground"}`}>
+                  <div className="text-xs uppercase tracking-wide font-medium text-muted-foreground">
                     {c.duration}
                   </div>
                   <div className="font-display text-2xl font-bold">{c.price}</div>
                 </div>
-                <ArrowRight className="size-5 group-hover:translate-x-1 transition-all" />
+                <ArrowRight className="size-5 text-muted-foreground group-hover:text-lagoon group-hover:translate-x-1 transition-all" />
               </div>
             </Link>
           ))}
@@ -351,13 +342,13 @@ function Steps() {
 
 function Photos() {
   const pics = [
-    { src: gallery3, alt: "Catch en plein vol", h: "row-span-2", fit: "object-contain bg-midnight" },
-    { src: groupSchool, alt: "Groupe réuni à l’école Trapez’cool", h: "", fit: "object-cover" },
-    { src: gallery6, alt: "Pratiquante accompagnée sur la barre", h: "", fit: "object-contain bg-sky" },
+    { src: gallery3, alt: "Catch en plein vol", fit: "object-contain bg-midnight" },
+    { src: groupSchool, alt: "Groupe réuni à l’école Trapez’cool", fit: "object-cover" },
+    { src: gallery6, alt: "Pratiquante accompagnée sur la barre", fit: "object-contain bg-sky" },
   ];
   return (
-    <section className="py-24 lg:py-32 px-5 lg:px-8 bg-coral/10 overflow-hidden">
-      <div className="max-w-7xl mx-auto">
+    <section className="py-20 lg:py-24 px-5 lg:px-8">
+      <div className="max-w-6xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
             <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-lagoon mb-4">
@@ -374,11 +365,11 @@ function Photos() {
             En savoir plus <ArrowRight className="size-4" />
           </Link>
         </div>
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 auto-rows-[240px] lg:auto-rows-[280px]">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
           {pics.map((p, i) => (
             <div
               key={i}
-              className={`overflow-hidden rounded-3xl ${p.h} ${i === 0 ? "col-span-2 lg:col-span-1" : ""}`}
+              className={`overflow-hidden rounded-3xl aspect-[4/3] ${i === 0 ? "col-span-2 lg:col-span-1" : ""}`}
             >
               <img
                 src={p.src}
