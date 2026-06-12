@@ -50,11 +50,13 @@ function SiteHeader({ transparent }: { transparent: boolean }) {
   return (
     <header
       className={cn(
-        "fixed top-0 inset-x-0 z-50 transition-all duration-300",
-        solid ? "bg-background/85 backdrop-blur-md border-b border-border" : "bg-transparent",
+        "fixed z-50 transition-all duration-300 inset-x-3 top-3 lg:inset-x-6 lg:top-5 rounded-full",
+        solid
+          ? "bg-background/90 backdrop-blur-xl border border-white/70 shadow-xl shadow-midnight/10"
+          : "bg-white/10 backdrop-blur-xl border border-white/20",
       )}
     >
-      <div className="max-w-7xl mx-auto px-5 lg:px-8 h-16 lg:h-20 flex items-center justify-between gap-6">
+      <div className="max-w-7xl mx-auto px-4 lg:px-6 h-14 lg:h-16 flex items-center justify-between gap-6">
         <Link to="/" className="flex items-center gap-2 group shrink-0">
           <Logo color={solid ? "midnight" : "paper"} />
         </Link>
@@ -77,7 +79,7 @@ function SiteHeader({ transparent }: { transparent: boolean }) {
           <Link
             to="/reserver"
             search={{ formule: "envolee" }}
-            className="hidden sm:inline-flex items-center h-10 px-5 rounded-full bg-lagoon text-white text-sm font-semibold hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-lagoon/20"
+               className="hidden sm:inline-flex items-center h-10 px-5 rounded-full bg-coral text-white text-sm font-bold hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-coral/25"
           >
             Réserver une séance
           </Link>
@@ -95,7 +97,7 @@ function SiteHeader({ transparent }: { transparent: boolean }) {
         </div>
       </div>
       {open && (
-        <div className="lg:hidden bg-background border-t border-border">
+        <div className="lg:hidden bg-background/95 backdrop-blur-xl rounded-3xl mt-2 border border-border shadow-2xl overflow-hidden">
           <div className="px-5 py-6 flex flex-col gap-1">
             {NAV.map((n) => (
               <Link
@@ -125,7 +127,7 @@ function Logo({ color = "midnight" }: { color?: "midnight" | "paper" }) {
   const cls = color === "paper" ? "text-white" : "text-foreground";
   return (
     <div className={cn("flex items-center gap-2.5", cls)}>
-      <span className="relative inline-flex size-9 rounded-full bg-lagoon items-center justify-center overflow-hidden">
+      <span className="relative inline-flex size-9 rounded-full bg-lagoon items-center justify-center overflow-hidden shadow-lg shadow-lagoon/25">
         <svg viewBox="0 0 32 32" className="size-6 text-white" fill="none" aria-hidden>
           <path
             d="M4 10 L16 18 L28 10"
