@@ -59,7 +59,7 @@ function Hero() {
       <div className="absolute inset-0 bg-gradient-to-r from-midnight/60 via-transparent to-transparent" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-5 lg:px-8 w-full pt-24">
-        <div className="max-w-3xl text-white animate-rise">
+        <div className="max-w-5xl text-white animate-rise">
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-xs font-semibold tracking-wide mb-6">
             <span className="relative flex size-2">
               <span className="absolute inset-0 rounded-full bg-solar animate-ping opacity-75" />
@@ -67,7 +67,7 @@ function Hero() {
             </span>
             Le Helleux · Sainte-Anne · Guadeloupe
           </span>
-          <h1 className="font-display text-5xl sm:text-6xl lg:text-8xl font-extrabold leading-[0.95] tracking-tighter text-balance mb-8">
+          <h1 className="font-display text-[clamp(3.25rem,6vw,6.5rem)] font-extrabold leading-[0.92] tracking-tighter mb-8">
             Prenez votre <span className="italic text-solar drop-shadow-sm">envol</span>
             <br />
             avec Trapez'cool
