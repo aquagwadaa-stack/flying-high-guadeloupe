@@ -85,7 +85,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "Découvrez le trapèze volant au Helleux, Sainte-Anne. Séances dès 7 ans, débutants bienvenus. Réservation en ligne.",
       },
       { name: "author", content: "Trapez'cool" },
-      { property: "og:title", content: "Trapez'cool — Trapèze volant en Guadeloupe" },
+      { property: "og:title", content: "Trapez'cool — École de trapèze volant en Guadeloupe" },
       {
         property: "og:description",
         content:
@@ -93,6 +93,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Trapez'cool — École de trapèze volant en Guadeloupe" },
+      { name: "description", content: "A professional, modern, and immersive website for a flying trapeze school in Guadeloupe." },
+      { property: "og:description", content: "A professional, modern, and immersive website for a flying trapeze school in Guadeloupe." },
+      { name: "twitter:description", content: "A professional, modern, and immersive website for a flying trapeze school in Guadeloupe." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/011cf975-59b9-4873-8398-b1aca08132c7/id-preview-1eb0e2bd--66a2e13e-a9b9-45ed-b477-c6d048dde02c.lovable.app-1781285350803.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/011cf975-59b9-4873-8398-b1aca08132c7/id-preview-1eb0e2bd--66a2e13e-a9b9-45ed-b477-c6d048dde02c.lovable.app-1781285350803.png" },
     ],
     links: [
       {
